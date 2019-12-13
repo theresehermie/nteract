@@ -1,6 +1,7 @@
 import Immutable from "immutable";
 import React from "react";
 
+import { ImmutableCell } from "@nteract/commutable";
 import { ContentRef } from "@nteract/core";
 import CodeMirrorEditor from "@nteract/editor";
 import { KernelOutputError, Media, StreamText } from "@nteract/outputs";
@@ -25,8 +26,8 @@ interface NamedCodeCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  cell: Immutable.Map<string, any>;
-  cell_type: "code";
+  cell?: ImmutableCell;
+  cell_type?: "code";
   children?: NamedCodeCellSlots;
 }
 
@@ -60,8 +61,8 @@ export default class CodeCell extends React.Component<ComponentProps> {
     }
 
     return (
-      <div>
-        <Input id={id} contentRef={contentRef} className="nteract-cell-input">
+      <div className="nteract-code-cell">
+        <Input id={id} contentRef={contentRef}>
           {prompt ? (
             <React.Fragment>{prompt}</React.Fragment>
           ) : (
@@ -70,11 +71,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
             </Prompt>
           )}
           <Source className="nteract-cell-source">
-            <Editor
-              id={id}
-              contentRef={contentRef}
-              className="nteract-cell-editor"
-            >
+            <Editor id={id} contentRef={contentRef}>
               {editor ? (
                 <React.Fragment>{editor}</React.Fragment>
               ) : (
@@ -86,11 +83,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
         {pagers ? (
           <React.Fragment>{pagers}</React.Fragment>
         ) : (
-          <Pagers
-            id={id}
-            contentRef={contentRef}
-            className="nteract-cell-pagers"
-          >
+          <Pagers id={id} contentRef={contentRef}>
             <Media.Json />
             <Media.JavaScript />
             <Media.HTML />
@@ -104,11 +97,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
         {outputs ? (
           <React.Fragment>{outputs}</React.Fragment>
         ) : (
-          <Outputs
-            id={id}
-            contentRef={contentRef}
-            className="nteract-cell-outputs"
-          >
+          <Outputs id={id} contentRef={contentRef}>
             <TransformMedia
               output_type={"display_data"}
               id={id}
@@ -126,11 +115,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
         {inputPrompts ? (
           <React.Fragment>{inputPrompts}</React.Fragment>
         ) : (
-          <InputPrompts
-            id={id}
-            contentRef={contentRef}
-            className="nteract-cell-input-prompts"
-          />
+          <InputPrompts id={id} contentRef={contentRef} />
         )}
       </div>
     );

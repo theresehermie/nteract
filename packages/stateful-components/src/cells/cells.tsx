@@ -26,7 +26,7 @@ interface StateProps {
 export class Cells extends React.Component<StateProps & ComponentProps> {
   render() {
     const { cellOrder, contentRef, children } = this.props;
-    let code, raw, markdown;
+    let code: React.ReactNode, raw: React.ReactNode, markdown: React.ReactNode;
     if (children) {
       code = children.code;
       raw = children.raw;
@@ -36,38 +36,21 @@ export class Cells extends React.Component<StateProps & ComponentProps> {
     return (
       <div className="nteract-cells">
         {cellOrder.map((id: string) => (
-          <Cell
-            id={id}
-            contentRef={contentRef}
-            key={id}
-            className="nteract-cell"
-          >
+          <Cell id={id} contentRef={contentRef} key={id}>
             {markdown ? (
               <React.Fragment>{markdown}</React.Fragment>
             ) : (
-              <MarkdownCell
-                id={id}
-                contentRef={contentRef}
-                className="nteract-md-cell"
-              />
+              <MarkdownCell id={id} contentRef={contentRef} />
             )}
             {raw ? (
               <React.Fragment>{raw}</React.Fragment>
             ) : (
-              <RawCell
-                id={id}
-                contentRef={contentRef}
-                className="nteract-raw-cell"
-              />
+              <RawCell id={id} contentRef={contentRef} />
             )}
             {code ? (
               <React.Fragment>{raw}</React.Fragment>
             ) : (
-              <CodeCell
-                id={id}
-                contentRef={contentRef}
-                className="nteract-code-cell"
-              />
+              <CodeCell id={id} contentRef={contentRef} />
             )}
           </Cell>
         ))}

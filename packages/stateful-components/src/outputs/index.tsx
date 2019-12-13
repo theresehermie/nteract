@@ -24,10 +24,8 @@ export class Outputs extends React.PureComponent<ComponentProps & StateProps> {
         className={`nteract-cell-outputs ${hidden && "hidden"} ${expanded &&
           "expanded"}`}
       >
-        {outputs.map((output, index) => (
-          <Output output={output} index={index}>
-            {children}
-          </Output>
+        {outputs.map(output => (
+          <Output output={output}>{children}</Output>
         ))}
       </div>
     );
@@ -63,4 +61,6 @@ export const makeMapStateToProps = (
   return mapStateToProps;
 };
 
-export default connect(makeMapStateToProps, null)(Outputs);
+export default connect<StateProps, void, ComponentProps, AppState>(
+  makeMapStateToProps
+)(Outputs);

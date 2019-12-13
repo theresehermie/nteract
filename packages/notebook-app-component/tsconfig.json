@@ -14,6 +14,7 @@
     { "path": "../markdown" },
     { "path": "../octicons" },
     { "path": "../presentational-components" },
+    { "path": "../stateful-components" },
     { "path": "../selectors" },
     { "path": "../types" },
     { "path": "../outputs" }

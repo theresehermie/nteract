@@ -6,7 +6,7 @@ import { ContentRef, AppState, selectors } from "@nteract/core";
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  children: React.ReactNode;
+  children: React.ReactChild;
 }
 
 interface StateProps {
@@ -19,7 +19,12 @@ export class Prompt extends React.Component<ComponentProps, StateProps> {
     const { children } = this.props;
     return (
       <div className="nteract-cell-prompt">
-        {React.cloneElement(children, this.props)}
+        {React.Children.map(this.props.children, child => {
+          if (typeof child === "string" || typeof child === "number") {
+            return;
+          }
+          return React.cloneElement(child, this.props);
+        })}
       </div>
     );
   }

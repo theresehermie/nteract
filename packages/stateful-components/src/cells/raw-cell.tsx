@@ -3,7 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
+import { ImmutableCell } from "@nteract/commutable";
 import { actions, AppState, ContentRef } from "@nteract/core";
+import CodeMirrorEditor from "@nteract/editor";
 import { Source } from "@nteract/presentational-components";
 
 import Editor from "../inputs/editor";
@@ -15,8 +17,8 @@ interface NamedRawCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  cell: Immutable.Map<string, any>;
-  cell_type: "raw";
+  cell?: ImmutableCell;
+  cell_type?: "raw";
   children?: NamedRawCellSlots;
 }
 
@@ -37,15 +39,17 @@ export class PureRawCell extends React.Component<
     }
 
     return (
-      <Source className="nteract-cell-source">
-        <Editor id={id} contentRef={contentRef} className="nteract-cell-editor">
-          {editor ? (
-            <React.Fragment>{editor}</React.Fragment>
-          ) : (
-            <CodeMirrorEditor />
-          )}
-        </Editor>
-      </Source>
+      <div className="nteract-raw-cell">
+        <Source className="nteract-cell-source">
+          <Editor id={id} contentRef={contentRef}>
+            {editor ? (
+              <React.Fragment>{editor}</React.Fragment>
+            ) : (
+              <CodeMirrorEditor />
+            )}
+          </Editor>
+        </Source>
+      </div>
     );
   }
 }

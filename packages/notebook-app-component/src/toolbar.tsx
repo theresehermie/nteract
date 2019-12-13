@@ -16,28 +16,17 @@ import { ContentRef } from "@nteract/types";
 import * as React from "react";
 
 import styled, { StyledComponent } from "styled-components";
+import { CellToolbar } from "@nteract/stateful-components";
 
-import { CellType } from "@nteract/commutable";
-
-export interface PureToolbarProps {
-  type: CellType;
-  executeCell: () => void;
-  deleteCell: () => void;
-  clearOutputs: () => void;
-  toggleParameterCell: () => void;
-  toggleCellInputVisibility: () => void;
-  toggleCellOutputVisibility: () => void;
-  toggleOutputExpansion: () => void;
-  changeCellType: () => void;
-  cellFocused: boolean;
-  sourceHidden: boolean;
+export interface ComponentProps {
+  contentRef: ContentRef;
 }
 
-interface PureToolbarState {
+interface ComponentState {
   moreActionsMenuExpanded: boolean;
 }
 
-export const CellToolbar = styled.div`
+export const StyledCellToolbar = styled(CellToolbar)`
   background-color: var(--theme-cell-toolbar-bg);
   opacity: 0.4;
   transition: opacity 0.4s;
@@ -118,139 +107,126 @@ export const CellToolbarMask = styled.div.attrs<CellToolbarMaskProps>(
                           focus/hide the toolbar before they get there */
 ` as StyledComponent<"div", any, CellToolbarMaskProps, never>;
 
-export class PureToolbar extends React.PureComponent<
-  PureToolbarProps,
-  PureToolbarState
+export default class Toolbar extends React.PureComponent<
+  ComponentProps,
+  ComponentState
 > {
-  static defaultProps: Partial<PureToolbarProps> = {
-    type: "code"
-  };
-
-  constructor(props: PureToolbarProps) {
+  constructor(props: ComponentProps) {
     super(props);
     this.state = { moreActionsMenuExpanded: false };
   }
 
   render(): JSX.Element {
-    const { executeCell, deleteCell, sourceHidden } = this.props;
-
     return (
-      <CellToolbarMask
-        sourceHidden={sourceHidden}
-        cellFocused={this.props.cellFocused}
-      >
-        <CellToolbar>
-          {this.props.type !== "markdown" && (
-            <button
-              onClick={executeCell}
-              title="execute cell"
-              className="executeButton"
-            >
-              <span className="octicon">
-                <TriangleRightOcticon />
-              </span>
-            </button>
-          )}
-          <DropdownMenu
-            onDisplayChanged={(expanded: boolean) => {
-              this.setState({ moreActionsMenuExpanded: expanded });
-            }}
-          >
-            <DropdownTrigger>
-              <button
-                title="show additional actions"
-                aria-expanded={this.state.moreActionsMenuExpanded}
-              >
-                <span className="octicon toggle-menu">
-                  <ChevronDownOcticon />
-                </span>
-              </button>
-            </DropdownTrigger>
-            {this.props.type === "code" ? (
-              <DropdownContent>
-                <li
-                  onClick={this.props.clearOutputs}
-                  className="clearOutput"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Clear Cell Output</a>
-                </li>
-                <li
-                  onClick={this.props.toggleCellInputVisibility}
-                  className="inputVisibility"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Toggle Input Visibility</a>
-                </li>
-                <li
-                  onClick={this.props.toggleCellOutputVisibility}
-                  className="outputVisibility"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Toggle Output Visibility</a>
-                </li>
-                <li
-                  onClick={this.props.toggleOutputExpansion}
-                  className="outputExpanded"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Toggle Expanded Output</a>
-                </li>
-                <li
-                  onClick={this.props.toggleParameterCell}
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Toggle Parameter Cell</a>
-                </li>
-
-                <li
-                  onClick={this.props.changeCellType}
-                  className="changeType"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Convert to Markdown Cell</a>
-                </li>
-              </DropdownContent>
-            ) : (
-              <DropdownContent>
-                <li
-                  onClick={this.props.changeCellType}
-                  className="changeType"
-                  role="option"
-                  aria-selected="false"
-                  tabIndex={0}
-                >
-                  <a>Convert to Code Cell</a>
-                </li>
-              </DropdownContent>
-            )}
-          </DropdownMenu>
-          <span className="spacer" />
+      <StyledCellToolbar contentRef={this.props.contentRef}>
+        {this.props.type !== "markdown" && (
           <button
-            onClick={deleteCell}
-            title="delete cell"
-            className="deleteButton"
+            onClick={this.props.executeCell}
+            title="execute cell"
+            className="executeButton"
           >
             <span className="octicon">
-              <TrashOcticon />
+              <TriangleRightOcticon />
             </span>
           </button>
-        </CellToolbar>
-      </CellToolbarMask>
+        )}
+        <DropdownMenu
+          onDisplayChanged={(expanded: boolean) => {
+            this.setState({ moreActionsMenuExpanded: expanded });
+          }}
+        >
+          <DropdownTrigger>
+            <button
+              title="show additional actions"
+              aria-expanded={this.state.moreActionsMenuExpanded}
+            >
+              <span className="octicon toggle-menu">
+                <ChevronDownOcticon />
+              </span>
+            </button>
+          </DropdownTrigger>
+          {this.props.type === "code" ? (
+            <DropdownContent>
+              <li
+                onClick={this.props.clearOutputs}
+                className="clearOutput"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Clear Cell Output</a>
+              </li>
+              <li
+                onClick={this.props.toggleCellInputVisibility}
+                className="inputVisibility"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Toggle Input Visibility</a>
+              </li>
+              <li
+                onClick={this.props.toggleCellOutputVisibility}
+                className="outputVisibility"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Toggle Output Visibility</a>
+              </li>
+              <li
+                onClick={this.props.toggleOutputExpansion}
+                className="outputExpanded"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Toggle Expanded Output</a>
+              </li>
+              <li
+                onClick={this.props.toggleParameterCell}
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Toggle Parameter Cell</a>
+              </li>
+
+              <li
+                onClick={this.props.changeCellType}
+                className="changeType"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Convert to Markdown Cell</a>
+              </li>
+            </DropdownContent>
+          ) : (
+            <DropdownContent>
+              <li
+                onClick={this.props.changeCellType}
+                className="changeType"
+                role="option"
+                aria-selected="false"
+                tabIndex={0}
+              >
+                <a>Convert to Code Cell</a>
+              </li>
+            </DropdownContent>
+          )}
+        </DropdownMenu>
+        <span className="spacer" />
+        <button
+          onClick={this.props.deleteCell}
+          title="delete cell"
+          className="deleteButton"
+        >
+          <span className="octicon">
+            <TrashOcticon />
+          </span>
+        </button>
+      </StyledCellToolbar>
     );
   }
 }
-
-export default PureToolbar;

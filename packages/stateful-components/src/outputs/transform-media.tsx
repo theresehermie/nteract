@@ -16,8 +16,8 @@ interface ComponentProps {
   output_type: string;
   id: string;
   contentRef: ContentRef;
-  index: number;
-  output: any;
+  index?: number;
+  output?: ImmutableDisplayData | ImmutableExecuteResult;
 }
 
 interface StateProps {
@@ -150,7 +150,7 @@ const makeMapDispatchToProps = (
               id,
               contentRef,
               metadata,
-              index,
+              index: index || 0,
               mediaType
             })
           );
@@ -161,7 +161,12 @@ const makeMapDispatchToProps = (
   return mapDispatchToProps;
 };
 
-const TransformMedia = connect(
+const TransformMedia = connect<
+  StateProps,
+  DispatchProps,
+  ComponentProps,
+  AppState
+>(
   makeMapStateToProps,
   makeMapDispatchToProps
 )(PureTransformMedia);

@@ -22,7 +22,12 @@ export class Pagers extends React.PureComponent<ComponentProps & StateProps> {
       <div className="nteract-cell-pagers">
         {pagers.map(pager => (
           <RichMedia data={pager.data} metadata={pager.metadata}>
-            {children}
+            {React.Children.map(this.props.children, child => {
+              if (typeof child === "string" || typeof child === "number") {
+                return;
+              }
+              return React.cloneElement(child, this.props);
+            })}
           </RichMedia>
         ))}
       </div>

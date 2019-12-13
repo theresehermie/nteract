@@ -50,7 +50,7 @@ export class PromptRequest extends React.PureComponent<Props, State> {
   render() {
     const { prompts } = this.props;
     return (
-      <div>
+      <div className="nteract-cell-input-prompts">
         {prompts.map(prompt => (
           <form onSubmit={this.handleSubmitPromptReply}>
             <label>{prompt.prompt}</label>

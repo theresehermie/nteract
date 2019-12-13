@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { selectors, AppState } from "@nteract/core";
+import { ImmutableCell } from "@nteract/commutable/src";
 
 interface ComponentProps {
   id: string;
@@ -10,7 +11,7 @@ interface ComponentProps {
 }
 
 interface StateProps {
-  cell: Immutable.Map<string, any>;
+  cell?: ImmutableCell;
 }
 
 export class Cell extends React.Component<ComponentProps & StateProps> {
@@ -22,7 +23,7 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
       return null;
     }
 
-    const cell_type = this.props.cell.get("cell_type");
+    const cell_type = this.props.cell.get("cell_type", "code");
 
     // Find the first child element that matches something in this.props.data
     React.Children.forEach(this.props.children, child => {
@@ -52,7 +53,8 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
     return React.cloneElement(chosenOne, {
       cell: this.props.cell,
       id: this.props.id,
-      contentRef: this.props.contentRef
+      contentRef: this.props.contentRef,
+      className: "nteract-cell"
     });
   }
 }
@@ -60,8 +62,8 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
 export const makeMapStateToProps = (
   initialState: AppState,
   ownProps: ComponentProps
-) => {
-  const mapStateToProps = (state: AppState) => {
+): ((state: AppState) => StateProps) => {
+  const mapStateToProps = (state: AppState): StateProps => {
     const { id, contentRef } = ownProps;
     const model = selectors.model(state, { contentRef });
     let cell = undefined;
@@ -75,4 +77,6 @@ export const makeMapStateToProps = (
   return mapStateToProps;
 };
 
-export default connect(makeMapStateToProps)(Cell);
+export default connect<StateProps, void, ComponentProps, AppState>(
+  makeMapStateToProps
+)(Cell);

@@ -9,6 +9,7 @@ import { MarkdownPreviewer } from "@nteract/markdown";
 import { Source } from "@nteract/presentational-components";
 
 import Editor from "../inputs/editor";
+import { ImmutableCell } from "@nteract/commutable/src";
 
 interface NamedMDCellSlots {
   editor?: React.ReactNode;
@@ -17,8 +18,8 @@ interface NamedMDCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  cell: Immutable.Map<string, any>;
-  cell_type: "markdown";
+  cell?: ImmutableCell;
+  cell_type?: "markdown";
   children?: NamedMDCellSlots;
 }
 
@@ -55,33 +56,30 @@ export class PureMarkdownCell extends React.Component<
       editor = children.editor;
     }
 
-    const source = cell.get("source", "");
+    const source = cell ? cell.get("source", "") : "";
 
     return (
-      <MarkdownPreviewer
-        focusAbove={focusAboveCell}
-        focusBelow={focusBelowCell}
-        focusEditor={focusEditor}
-        cellFocused={isCellFocused}
-        editorFocused={isEditorFocused}
-        unfocusEditor={unfocusEditor}
-        source={source}
-        className="nteract-cell-md-previewer"
-      >
-        <Source className="nteract-cell-source">
-          <Editor
-            id={id}
-            contentRef={contentRef}
-            className="nteract-cell-editor"
-          >
-            {editor ? (
-              <React.Fragment>{editor}</React.Fragment>
-            ) : (
-              <CodeMirrorEditor />
-            )}
-          </Editor>
-        </Source>
-      </MarkdownPreviewer>
+      <div className="nteract-md-cell">
+        <MarkdownPreviewer
+          focusAbove={focusAboveCell}
+          focusBelow={focusBelowCell}
+          focusEditor={focusEditor}
+          cellFocused={isCellFocused}
+          editorFocused={isEditorFocused}
+          unfocusEditor={unfocusEditor}
+          source={source}
+        >
+          <Source className="nteract-cell-source">
+            <Editor id={id} contentRef={contentRef}>
+              {editor ? (
+                <React.Fragment>{editor}</React.Fragment>
+              ) : (
+                <CodeMirrorEditor />
+              )}
+            </Editor>
+          </Source>
+        </MarkdownPreviewer>
+      </div>
     );
   }
 }

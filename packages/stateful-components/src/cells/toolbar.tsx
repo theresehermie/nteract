@@ -2,13 +2,17 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import { ContentRef, actions } from "@nteract/core";
+import { ContentRef, actions, AppState, selectors } from "@nteract/core";
 import { CellType } from "@nteract/commutable";
 
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
   children: React.ReactNode;
+}
+
+interface StateProps {
+  type: CellType;
 }
 
 interface DispatchProps {
@@ -29,14 +33,42 @@ interface DispatchProps {
   unfocusEditor: () => void;
 }
 
-export class CellToolbar extends React.Component {
+export class CellToolbar extends React.Component<
+  ComponentProps & StateProps & DispatchProps
+> {
   render() {
-    return React.cloneElement(this.props.children, {
-      ...this.props,
-      className: "nteract-cell-toolbar"
-    });
+    return (
+      <div className="nteract-toolbar">
+        {React.Children.map(this.props.children, child => {
+          if (typeof child === "string" || typeof child === "number") {
+            return;
+          }
+          return React.cloneElement(child, this.props);
+        })}
+      </div>
+    );
   }
 }
+
+const makeMapStateToProps = (
+  state: AppState,
+  ownProps: ComponentProps
+): ((state: AppState) => StateProps) => {
+  const mapStateToProps = (state: AppState): StateProps => {
+    const { id, contentRef } = ownProps;
+    const model = selectors.model(state, { contentRef });
+    let type: CellType = "code";
+
+    if (model && model.type === "notebook") {
+      const cell = selectors.notebook.cellById(model, { id });
+      if (cell) {
+        type = cell.get<CellType>("cell_type", "code");
+      }
+    }
+    return { type };
+  };
+  return mapStateToProps;
+};
 
 const mapDispatchToProps = (
   dispatch: Dispatch,
