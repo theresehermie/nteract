@@ -16,10 +16,11 @@ import { ContentRef } from "@nteract/types";
 import * as React from "react";
 
 import styled, { StyledComponent } from "styled-components";
-import { CellToolbar } from "@nteract/stateful-components";
+import CellToolbar, { CellToolbarProps } from "@nteract/stateful-components/";
 
-export interface ComponentProps {
+export interface ComponentProps extends CellToolbarProps {
   contentRef: ContentRef;
+  id: string;
 }
 
 interface ComponentState {
@@ -118,7 +119,10 @@ export default class Toolbar extends React.PureComponent<
 
   render(): JSX.Element {
     return (
-      <StyledCellToolbar contentRef={this.props.contentRef}>
+      <StyledCellToolbar
+        contentRef={this.props.contentRef}
+        id={this.props.contentRef}
+      >
         {this.props.type !== "markdown" && (
           <button
             onClick={this.props.executeCell}
@@ -193,7 +197,7 @@ export default class Toolbar extends React.PureComponent<
               </li>
 
               <li
-                onClick={this.props.changeCellType}
+                onClick={this.props.changeToMarkdownCell}
                 className="changeType"
                 role="option"
                 aria-selected="false"
@@ -205,7 +209,7 @@ export default class Toolbar extends React.PureComponent<
           ) : (
             <DropdownContent>
               <li
-                onClick={this.props.changeCellType}
+                onClick={this.props.changeToCodeCell}
                 className="changeType"
                 role="option"
                 aria-selected="false"

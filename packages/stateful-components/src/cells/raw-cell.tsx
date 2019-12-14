@@ -12,6 +12,7 @@ import Editor from "../inputs/editor";
 
 interface NamedRawCellSlots {
   editor?: React.ReactChild;
+  toolbar?: React.ReactChild;
 }
 
 interface ComponentProps {
@@ -33,13 +34,15 @@ export class PureRawCell extends React.Component<
   render() {
     const { id, contentRef, children } = this.props;
 
-    let editor;
+    let editor, toolbar;
     if (children) {
       editor = children.editor;
+      toolbar = children.toolbar;
     }
 
     return (
-      <div className="nteract-raw-cell">
+      <div className="nteract-raw-cell nteract-cell">
+        {toolbar}
         <Source className="nteract-cell-source">
           <Editor id={id} contentRef={contentRef}>
             {editor ? (

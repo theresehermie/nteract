@@ -5,17 +5,17 @@ import { Dispatch } from "redux";
 import { ContentRef, actions, AppState, selectors } from "@nteract/core";
 import { CellType } from "@nteract/commutable";
 
-interface ComponentProps {
+export interface ComponentProps {
   id: string;
   contentRef: ContentRef;
   children: React.ReactNode;
 }
 
-interface StateProps {
-  type: CellType;
+export interface StateProps {
+  type?: CellType;
 }
 
-interface DispatchProps {
+export interface DispatchProps {
   executeCell: () => void;
   deleteCell: () => void;
   clearOutputs: () => void;
@@ -33,6 +33,7 @@ interface DispatchProps {
   unfocusEditor: () => void;
 }
 
+export type CellToolbarProps = DispatchProps & StateProps;
 export class CellToolbar extends React.Component<
   ComponentProps & StateProps & DispatchProps
 > {
@@ -110,4 +111,4 @@ const mapDispatchToProps = (
   };
 };
 
-export default connect(null, mapDispatchToProps)(CellToolbar);
+export default connect(makeMapStateToProps, mapDispatchToProps)(CellToolbar);

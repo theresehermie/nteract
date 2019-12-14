@@ -13,6 +13,7 @@ import { ImmutableCell } from "@nteract/commutable/src";
 
 interface NamedMDCellSlots {
   editor?: React.ReactNode;
+  toolbar?: React.ReactNode;
 }
 
 interface ComponentProps {
@@ -51,15 +52,17 @@ export class PureMarkdownCell extends React.Component<
     } = this.props;
 
     const { children } = this.props;
-    let editor;
+    let editor, toolbar;
     if (children) {
       editor = children.editor;
+      toolbar = children.toolbar;
     }
 
     const source = cell ? cell.get("source", "") : "";
 
     return (
-      <div className="nteract-md-cell">
+      <div className="nteract-md-cell nteract-cell">
+        {toolbar}
         <MarkdownPreviewer
           focusAbove={focusAboveCell}
           focusBelow={focusBelowCell}

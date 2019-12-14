@@ -8,6 +8,7 @@ import { ImmutableCell } from "@nteract/commutable/src";
 interface ComponentProps {
   id: string;
   contentRef: string;
+  children: React.ReactChild;
 }
 
 interface StateProps {

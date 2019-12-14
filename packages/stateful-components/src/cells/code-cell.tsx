@@ -21,6 +21,7 @@ interface NamedCodeCellSlots {
   pagers?: React.ReactChild;
   inputPrompts?: React.ReactChild;
   outputs?: React.ReactChild;
+  toolbar?: React.ReactChild;
 }
 
 interface ComponentProps {
@@ -51,17 +52,18 @@ export default class CodeCell extends React.Component<ComponentProps> {
 
   render() {
     const { id, contentRef, children } = this.props;
-    let editor, prompt, pagers, inputPrompts, outputs;
+    let editor, prompt, pagers, inputPrompts, outputs, toolbar;
     if (children) {
       editor = children.editor;
       prompt = children.prompt;
       pagers = children.pagers;
       inputPrompts = children.inputPrompts;
       outputs = children.outputs;
+      toolbar = children.toolbar;
     }
 
     return (
-      <div className="nteract-code-cell">
+      <div className="nteract-code-cell nteract-cell">
         <Input id={id} contentRef={contentRef}>
           {prompt ? (
             <React.Fragment>{prompt}</React.Fragment>
@@ -117,6 +119,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
         ) : (
           <InputPrompts id={id} contentRef={contentRef} />
         )}
+        {toolbar}
       </div>
     );
   }

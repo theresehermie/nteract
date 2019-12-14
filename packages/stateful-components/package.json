@@ -10,20 +10,10 @@
   "author": "Safia Abdalla <safia@microsoft.com>",
   "homepage": "https://github.com/nteract/nteract/tree/master/packages/stateful-components#readme",
   "license": "BSD-3-Clause",
-  "main": "lib/stateful-components.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nteract/nteract.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/nteract/nteract/issues"
