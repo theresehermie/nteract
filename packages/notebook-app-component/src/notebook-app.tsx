@@ -186,16 +186,12 @@ const Theme = createGlobalStyle`
   }
 
   .nteract-cells {
-    & > * {
-      margin: 20px 0;
-    }
-
     font-family: "Source Sans Pro", Helvetica Neue, Helvetica, sans-serif;
     font-size: 16px;
     background-color: var(--theme-app-bg);
     color: var(--theme-app-fg);
     padding-bottom: 10px;
-
+    margin: 20px 0;
   }
 
   .nteract-cell {
@@ -238,9 +234,15 @@ export default class NotebookApp extends React.Component<ComponentProps> {
       <React.Fragment>
         <NotebookHelmet contentRef={this.props.contentRef} />
         <Cells contentRef={this.props.contentRef}>
-          <CodeCell>{{ toolbar: <CellToolbar /> }}</CodeCell>
-          <MarkdownCell>{{ toolbar: <CellToolbar /> }}</MarkdownCell>
-          <RawCell>{{ toolbar: <CellToolbar /> }}</RawCell>
+          {{
+            code: () => (
+              <CodeCell>{{ toolbar: () => <CellToolbar /> }}</CodeCell>
+            ),
+            markdown: () => (
+              <MarkdownCell>{{ toolbar: () => <CellToolbar /> }}</MarkdownCell>
+            ),
+            raw: () => <RawCell>{{ toolbar: () => <CellToolbar /> }}</RawCell>
+          }}
         </Cells>
         <StatusBar contentRef={this.props.contentRef} />
         <Theme />

@@ -12,8 +12,8 @@ import Editor from "../inputs/editor";
 import { ImmutableCell } from "@nteract/commutable/src";
 
 interface NamedMDCellSlots {
-  editor?: React.ReactNode;
-  toolbar?: React.ReactNode;
+  editor?: () => JSX.Element;
+  toolbar?: () => JSX.Element;
 }
 
 interface ComponentProps {
@@ -40,7 +40,7 @@ export class PureMarkdownCell extends React.Component<
   ComponentProps & DispatchProps & StateProps
 > {
   render() {
-    const { contentRef, id, cell } = this.props;
+    const { contentRef, id, cell, children } = this.props;
 
     const { isEditorFocused, isCellFocused } = this.props;
 
@@ -51,12 +51,12 @@ export class PureMarkdownCell extends React.Component<
       unfocusEditor
     } = this.props;
 
-    const { children } = this.props;
-    let editor, toolbar;
-    if (children) {
-      editor = children.editor;
-      toolbar = children.toolbar;
-    }
+    const defaults = {
+      editor: () => <CodeMirrorEditor />
+    };
+
+    const editor = children?.editor || defaults.editor;
+    const toolbar = children?.toolbar;
 
     const source = cell ? cell.get("source", "") : "";
 
@@ -74,11 +74,8 @@ export class PureMarkdownCell extends React.Component<
         >
           <Source className="nteract-cell-source">
             <Editor id={id} contentRef={contentRef}>
-              {editor ? (
-                <React.Fragment>{editor}</React.Fragment>
-              ) : (
-                <CodeMirrorEditor />
-              )}
+              {editor()}
+              {toolbar && toolbar()}
             </Editor>
           </Source>
         </MarkdownPreviewer>

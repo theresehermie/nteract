@@ -10,9 +10,9 @@ import MarkdownCell from "./markdown-cell";
 import RawCell from "./raw-cell";
 
 interface NamedCellSlots {
-  code?: React.ReactChild;
-  markdown?: React.ReactChild;
-  raw?: React.ReactChild;
+  code?: (props: { id: string; contentRef: string }) => JSX.Element;
+  markdown?: (props: { id: string; contentRef: string }) => JSX.Element;
+  raw?: (props: { id: string; contentRef: string }) => JSX.Element;
 }
 interface ComponentProps {
   contentRef: ContentRef;
@@ -24,34 +24,33 @@ interface StateProps {
 }
 
 export class Cells extends React.Component<StateProps & ComponentProps> {
+  static defaultProps = {
+    children: {
+      markdown: ({ id, contentRef }: { id: string; contentRef: string }) => (
+        <MarkdownCell id={id} contentRef={contentRef} />
+      ),
+      code: ({ id, contentRef }: { id: string; contentRef: string }) => (
+        <CodeCell id={id} contentRef={contentRef} />
+      ),
+      raw: ({ id, contentRef }: { id: string; contentRef: string }) => (
+        <RawCell id={id} contentRef={contentRef} />
+      )
+    }
+  };
   render() {
     const { cellOrder, contentRef, children } = this.props;
-    let code: React.ReactNode, raw: React.ReactNode, markdown: React.ReactNode;
-    if (children) {
-      code = children.code;
-      raw = children.raw;
-      markdown = children.markdown;
-    }
+    console.log(this.props);
+    const { code, raw, markdown } = children;
+
+    console.log(markdown);
 
     return (
       <div className="nteract-cells">
         {cellOrder.map((id: string) => (
           <Cell id={id} contentRef={contentRef} key={id}>
-            {markdown ? (
-              <React.Fragment>{markdown}</React.Fragment>
-            ) : (
-              <MarkdownCell id={id} contentRef={contentRef} />
-            )}
-            {raw ? (
-              <React.Fragment>{raw}</React.Fragment>
-            ) : (
-              <RawCell id={id} contentRef={contentRef} />
-            )}
-            {code ? (
-              <React.Fragment>{raw}</React.Fragment>
-            ) : (
-              <CodeCell id={id} contentRef={contentRef} />
-            )}
+            {markdown({ id, contentRef })}
+            {raw({ id, contentRef })}
+            {code({ id, contentRef })}
           </Cell>
         ))}
       </div>

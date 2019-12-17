@@ -33,6 +33,8 @@ export interface DispatchProps {
   unfocusEditor: () => void;
 }
 
+export const CellToolbarContext = React.createContext({});
+
 export type CellToolbarProps = DispatchProps & StateProps;
 export class CellToolbar extends React.Component<
   ComponentProps & StateProps & DispatchProps
@@ -40,12 +42,9 @@ export class CellToolbar extends React.Component<
   render() {
     return (
       <div className="nteract-toolbar">
-        {React.Children.map(this.props.children, child => {
-          if (typeof child === "string" || typeof child === "number") {
-            return;
-          }
-          return React.cloneElement(child, this.props);
-        })}
+        <CellToolbarContext.Provider value={this.props}>
+          {this.props.children}
+        </CellToolbarContext.Provider>
       </div>
     );
   }

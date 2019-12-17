@@ -16,9 +16,9 @@ import { ContentRef } from "@nteract/types";
 import * as React from "react";
 
 import styled, { StyledComponent } from "styled-components";
-import CellToolbar, { CellToolbarProps } from "@nteract/stateful-components/";
+import { CellToolbar, CellToolbarContext } from "@nteract/stateful-components";
 
-export interface ComponentProps extends CellToolbarProps {
+export interface ComponentProps {
   contentRef: ContentRef;
   id: string;
 }
@@ -112,6 +112,8 @@ export default class Toolbar extends React.PureComponent<
   ComponentProps,
   ComponentState
 > {
+  static contextType = CellToolbarContext;
+
   constructor(props: ComponentProps) {
     super(props);
     this.state = { moreActionsMenuExpanded: false };
@@ -123,9 +125,9 @@ export default class Toolbar extends React.PureComponent<
         contentRef={this.props.contentRef}
         id={this.props.contentRef}
       >
-        {this.props.type !== "markdown" && (
+        {this.context.type !== "markdown" && (
           <button
-            onClick={this.props.executeCell}
+            onClick={this.context.executeCell}
             title="execute cell"
             className="executeButton"
           >
@@ -149,10 +151,10 @@ export default class Toolbar extends React.PureComponent<
               </span>
             </button>
           </DropdownTrigger>
-          {this.props.type === "code" ? (
+          {this.context.type === "code" ? (
             <DropdownContent>
               <li
-                onClick={this.props.clearOutputs}
+                onClick={this.context.clearOutputs}
                 className="clearOutput"
                 role="option"
                 aria-selected="false"
@@ -161,7 +163,7 @@ export default class Toolbar extends React.PureComponent<
                 <a>Clear Cell Output</a>
               </li>
               <li
-                onClick={this.props.toggleCellInputVisibility}
+                onClick={this.context.toggleCellInputVisibility}
                 className="inputVisibility"
                 role="option"
                 aria-selected="false"
@@ -170,7 +172,7 @@ export default class Toolbar extends React.PureComponent<
                 <a>Toggle Input Visibility</a>
               </li>
               <li
-                onClick={this.props.toggleCellOutputVisibility}
+                onClick={this.context.toggleCellOutputVisibility}
                 className="outputVisibility"
                 role="option"
                 aria-selected="false"
@@ -179,7 +181,7 @@ export default class Toolbar extends React.PureComponent<
                 <a>Toggle Output Visibility</a>
               </li>
               <li
-                onClick={this.props.toggleOutputExpansion}
+                onClick={this.context.toggleOutputExpansion}
                 className="outputExpanded"
                 role="option"
                 aria-selected="false"
@@ -188,7 +190,7 @@ export default class Toolbar extends React.PureComponent<
                 <a>Toggle Expanded Output</a>
               </li>
               <li
-                onClick={this.props.toggleParameterCell}
+                onClick={this.context.toggleParameterCell}
                 role="option"
                 aria-selected="false"
                 tabIndex={0}
@@ -197,7 +199,7 @@ export default class Toolbar extends React.PureComponent<
               </li>
 
               <li
-                onClick={this.props.changeToMarkdownCell}
+                onClick={this.context.changeToMarkdownCell}
                 className="changeType"
                 role="option"
                 aria-selected="false"
@@ -209,7 +211,7 @@ export default class Toolbar extends React.PureComponent<
           ) : (
             <DropdownContent>
               <li
-                onClick={this.props.changeToCodeCell}
+                onClick={this.context.changeToCodeCell}
                 className="changeType"
                 role="option"
                 aria-selected="false"
@@ -222,7 +224,7 @@ export default class Toolbar extends React.PureComponent<
         </DropdownMenu>
         <span className="spacer" />
         <button
-          onClick={this.props.deleteCell}
+          onClick={this.context.deleteCell}
           title="delete cell"
           className="deleteButton"
         >

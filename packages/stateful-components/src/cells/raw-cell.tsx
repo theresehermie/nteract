@@ -11,8 +11,8 @@ import { Source } from "@nteract/presentational-components";
 import Editor from "../inputs/editor";
 
 interface NamedRawCellSlots {
-  editor?: React.ReactChild;
-  toolbar?: React.ReactChild;
+  editor?: () => JSX.Element;
+  toolbar?: () => JSX.Element;
 }
 
 interface ComponentProps {
@@ -34,11 +34,12 @@ export class PureRawCell extends React.Component<
   render() {
     const { id, contentRef, children } = this.props;
 
-    let editor, toolbar;
-    if (children) {
-      editor = children.editor;
-      toolbar = children.toolbar;
-    }
+    const defaults = {
+      editor: () => <CodeMirrorEditor />
+    };
+
+    const editor = children?.editor || defaults.editor;
+    const toolbar = children?.toolbar;
 
     return (
       <div className="nteract-raw-cell nteract-cell">
