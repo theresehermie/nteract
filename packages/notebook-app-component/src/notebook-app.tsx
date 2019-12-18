@@ -22,13 +22,33 @@ export default class NotebookApp extends React.Component<ComponentProps> {
         <NotebookHelmet contentRef={this.props.contentRef} />
         <Cells contentRef={this.props.contentRef}>
           {{
-            code: () => (
-              <CodeCell>{{ toolbar: () => <CellToolbar /> }}</CodeCell>
+            code: (props: { id: string; contentRef: ContentRef }) => (
+              <CodeCell id={props.id} contentRef={props.contentRef}>
+                {{
+                  toolbar: () => (
+                    <CellToolbar id={props.id} contentRef={props.contentRef} />
+                  )
+                }}
+              </CodeCell>
             ),
-            markdown: () => (
-              <MarkdownCell>{{ toolbar: () => <CellToolbar /> }}</MarkdownCell>
+            markdown: (props: { id: string; contentRef: ContentRef }) => (
+              <MarkdownCell id={props.id} contentRef={props.contentRef}>
+                {{
+                  toolbar: () => (
+                    <CellToolbar id={props.id} contentRef={props.contentRef} />
+                  )
+                }}
+              </MarkdownCell>
             ),
-            raw: () => <RawCell>{{ toolbar: () => <CellToolbar /> }}</RawCell>
+            raw: (props: { id: string; contentRef: ContentRef }) => (
+              <RawCell id={props.id} contentRef={props.contentRef}>
+                {{
+                  toolbar: () => (
+                    <CellToolbar id={props.id} contentRef={props.contentRef} />
+                  )
+                }}
+              </RawCell>
+            )
           }}
         </Cells>
         <StatusBar contentRef={this.props.contentRef} />

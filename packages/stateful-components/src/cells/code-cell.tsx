@@ -18,11 +18,11 @@ import { inputRequests } from "@nteract/messaging/src";
 
 interface NamedCodeCellSlots {
   editor?: () => JSX.Element;
-  prompt: (props: { id: string; contentRef: string }) => JSX.Element;
+  prompt?: (props: { id: string; contentRef: string }) => JSX.Element;
   pagers?: (props: any) => JSX.Element;
   inputPrompts?: (props: any) => JSX.Element;
   outputs?: (props: any) => JSX.Element;
-  toolbar: () => JSX.Element;
+  toolbar?: () => JSX.Element;
 }
 
 interface ComponentProps {
@@ -60,7 +60,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
           <PromptText />
         </Prompt>
       ),
-      editor: (props: any) => <CodeMirrorEditor />,
+      editor: () => <CodeMirrorEditor />,
       pagers: (props: any) => (
         <Pagers id={id} contentRef={contentRef}>
           <Media.Json />
@@ -114,7 +114,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
         {pagers({ id, contentRef })}
         {outputs({ id, contentRef })}
         {inputPrompts({ id, contentRef })}
-        {toolbar()}
+        {toolbar && toolbar()}
       </div>
     );
   }

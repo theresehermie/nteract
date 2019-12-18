@@ -8,6 +8,7 @@ import Cell from "./cell";
 import CodeCell from "./code-cell";
 import MarkdownCell from "./markdown-cell";
 import RawCell from "./raw-cell";
+import { defaults } from "codemirror";
 
 interface NamedCellSlots {
   code?: (props: { id: string; contentRef: string }) => JSX.Element;
@@ -23,26 +24,30 @@ interface StateProps {
   cellOrder: Immutable.List<string>;
 }
 
+interface CellProps {
+  id: string;
+  contentRef: ContentRef;
+}
+
 export class Cells extends React.Component<StateProps & ComponentProps> {
-  static defaultProps = {
-    children: {
-      markdown: ({ id, contentRef }: { id: string; contentRef: string }) => (
-        <MarkdownCell id={id} contentRef={contentRef} />
-      ),
-      code: ({ id, contentRef }: { id: string; contentRef: string }) => (
-        <CodeCell id={id} contentRef={contentRef} />
-      ),
-      raw: ({ id, contentRef }: { id: string; contentRef: string }) => (
-        <RawCell id={id} contentRef={contentRef} />
-      )
-    }
-  };
   render() {
     const { cellOrder, contentRef, children } = this.props;
-    console.log(this.props);
-    const { code, raw, markdown } = children;
 
-    console.log(markdown);
+    const defaults = {
+      markdown: (props: CellProps) => (
+        <MarkdownCell id={props.id} contentRef={props.contentRef} />
+      ),
+      code: (props: CellProps) => (
+        <CodeCell id={props.id} contentRef={props.contentRef} />
+      ),
+      raw: (props: CellProps) => (
+        <RawCell id={props.id} contentRef={props.contentRef} />
+      )
+    };
+
+    const code = children?.code || defaults.code;
+    const markdown = children?.markdown || defaults.markdown;
+    const raw = children?.raw || defaults.raw;
 
     return (
       <div className="nteract-cells">

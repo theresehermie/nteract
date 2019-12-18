@@ -27,58 +27,58 @@ interface ComponentState {
   moreActionsMenuExpanded: boolean;
 }
 
-export const StyledCellToolbar = styled(CellToolbar)`
-  background-color: var(--theme-cell-toolbar-bg);
-  opacity: 0.4;
-  transition: opacity 0.4s;
+// export const StyledCellToolbar = styled(CellToolbar)`
+//   background-color: var(--theme-cell-toolbar-bg);
+//   opacity: 0.4;
+//   transition: opacity 0.4s;
 
-  & > div {
-    display: inline-block;
-  }
+//   & > div {
+//     display: inline-block;
+//   }
 
-  :hover {
-    opacity: 1;
-  }
+//   :hover {
+//     opacity: 1;
+//   }
 
-  @media print {
-    display: none;
-  }
+//   @media print {
+//     display: none;
+//   }
 
-  button {
-    display: inline-block;
+//   button {
+//     display: inline-block;
 
-    width: 22px;
-    height: 20px;
-    padding: 0px 4px;
+//     width: 22px;
+//     height: 20px;
+//     padding: 0px 4px;
 
-    text-align: center;
+//     text-align: center;
 
-    border: none;
-    outline: none;
-    background: none;
-  }
+//     border: none;
+//     outline: none;
+//     background: none;
+//   }
 
-  span {
-    font-size: 15px;
-    line-height: 1;
-    color: var(--theme-cell-toolbar-fg);
-  }
+//   span {
+//     font-size: 15px;
+//     line-height: 1;
+//     color: var(--theme-cell-toolbar-fg);
+//   }
 
-  button span:hover {
-    color: var(--theme-cell-toolbar-fg-hover);
-  }
+//   button span:hover {
+//     color: var(--theme-cell-toolbar-fg-hover);
+//   }
 
-  .octicon {
-    transition: color 0.5s;
-  }
+//   .octicon {
+//     transition: color 0.5s;
+//   }
 
-  span.spacer {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 1px 5px 3px 5px;
-    height: 11px;
-  }
-`;
+//   span.spacer {
+//     display: inline-block;
+//     vertical-align: middle;
+//     margin: 1px 5px 3px 5px;
+//     height: 11px;
+//   }
+// `;
 
 interface CellToolbarMaskProps {
   sourceHidden: boolean;
@@ -121,118 +121,122 @@ export default class Toolbar extends React.PureComponent<
 
   render(): JSX.Element {
     return (
-      <StyledCellToolbar
+      <CellToolbar
         contentRef={this.props.contentRef}
         id={this.props.contentRef}
       >
-        {this.context.type !== "markdown" && (
+        <CellToolbarContext.Consumer>
+          {(context) => (<React.Fragment>{(this.context.type === "code" && (
+            <button
+              onClick={this.context.executeCell}
+              title="execute cell"
+              className="executeButton"
+            >
+              <span className="octicon">
+                <TriangleRightOcticon />
+              </span>
+          </button>))}
+            </React.Fragment>
+          
+          <DropdownMenu
+            onDisplayChanged={(expanded: boolean) => {
+              this.setState({ moreActionsMenuExpanded: expanded });
+            }}
+          >
+            <DropdownTrigger>
+              <button
+                title="show additional actions"
+                aria-expanded={this.state.moreActionsMenuExpanded}
+              >
+                <span className="octicon toggle-menu">
+                  <ChevronDownOcticon />
+                </span>
+              </button>
+            </DropdownTrigger>
+            {this.context.type === "code" ? (
+              <DropdownContent>
+                <li
+                  onClick={this.context.clearOutputs}
+                  className="clearOutput"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Clear Cell Output</a>
+                </li>
+                <li
+                  onClick={this.context.toggleCellInputVisibility}
+                  className="inputVisibility"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Toggle Input Visibility</a>
+                </li>
+                <li
+                  onClick={this.context.toggleCellOutputVisibility}
+                  className="outputVisibility"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Toggle Output Visibility</a>
+                </li>
+                <li
+                  onClick={this.context.toggleOutputExpansion}
+                  className="outputExpanded"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Toggle Expanded Output</a>
+                </li>
+                <li
+                  onClick={this.context.toggleParameterCell}
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Toggle Parameter Cell</a>
+                </li>
+
+                <li
+                  onClick={this.context.changeToMarkdownCell}
+                  className="changeType"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Convert to Markdown Cell</a>
+                </li>
+              </DropdownContent>
+            ) : (
+              <DropdownContent>
+                <li
+                  onClick={this.context.changeToCodeCell}
+                  className="changeType"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={0}
+                >
+                  <a>Convert to Code Cell</a>
+                </li>
+              </DropdownContent>
+            )}
+          </DropdownMenu>
+          <span className="spacer" />
           <button
-            onClick={this.context.executeCell}
-            title="execute cell"
-            className="executeButton"
+            onClick={this.context.deleteCell}
+            title="delete cell"
+            className="deleteButton"
           >
             <span className="octicon">
-              <TriangleRightOcticon />
+              <TrashOcticon />
             </span>
-          </button>
-        )}
-        <DropdownMenu
-          onDisplayChanged={(expanded: boolean) => {
-            this.setState({ moreActionsMenuExpanded: expanded });
-          }}
-        >
-          <DropdownTrigger>
-            <button
-              title="show additional actions"
-              aria-expanded={this.state.moreActionsMenuExpanded}
-            >
-              <span className="octicon toggle-menu">
-                <ChevronDownOcticon />
-              </span>
-            </button>
-          </DropdownTrigger>
-          {this.context.type === "code" ? (
-            <DropdownContent>
-              <li
-                onClick={this.context.clearOutputs}
-                className="clearOutput"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Clear Cell Output</a>
-              </li>
-              <li
-                onClick={this.context.toggleCellInputVisibility}
-                className="inputVisibility"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Toggle Input Visibility</a>
-              </li>
-              <li
-                onClick={this.context.toggleCellOutputVisibility}
-                className="outputVisibility"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Toggle Output Visibility</a>
-              </li>
-              <li
-                onClick={this.context.toggleOutputExpansion}
-                className="outputExpanded"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Toggle Expanded Output</a>
-              </li>
-              <li
-                onClick={this.context.toggleParameterCell}
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Toggle Parameter Cell</a>
-              </li>
-
-              <li
-                onClick={this.context.changeToMarkdownCell}
-                className="changeType"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Convert to Markdown Cell</a>
-              </li>
-            </DropdownContent>
-          ) : (
-            <DropdownContent>
-              <li
-                onClick={this.context.changeToCodeCell}
-                className="changeType"
-                role="option"
-                aria-selected="false"
-                tabIndex={0}
-              >
-                <a>Convert to Code Cell</a>
-              </li>
-            </DropdownContent>
-          )}
-        </DropdownMenu>
-        <span className="spacer" />
-        <button
-          onClick={this.context.deleteCell}
-          title="delete cell"
-          className="deleteButton"
-        >
-          <span className="octicon">
-            <TrashOcticon />
-          </span>
-        </button>
-      </StyledCellToolbar>
+          </button>)}
+          
+        </CellToolbarContext.Consumer>
+      </CellToolbar>
     );
   }
 }

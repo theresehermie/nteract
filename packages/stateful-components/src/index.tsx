@@ -5,7 +5,7 @@ import Cells from "./cells/cells";
 import CodeCell from "./cells/code-cell";
 import MarkdownCell from "./cells/markdown-cell";
 import RawCell from "./cells/raw-cell";
-import { CellToolbar, CellToolbarContext } from "./cells/toolbar";
+import CellToolbar, { CellToolbarContext } from "./cells/toolbar";
 
 export {
   Cells,

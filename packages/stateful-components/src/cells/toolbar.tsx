@@ -36,7 +36,8 @@ export interface DispatchProps {
 export const CellToolbarContext = React.createContext({});
 
 export type CellToolbarProps = DispatchProps & StateProps;
-export class CellToolbar extends React.Component<
+
+class CellToolbar extends React.Component<
   ComponentProps & StateProps & DispatchProps
 > {
   render() {
@@ -110,4 +111,7 @@ const mapDispatchToProps = (
   };
 };
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(CellToolbar);
+export default connect<StateProps, DispatchProps, ComponentProps, AppState>(
+  makeMapStateToProps,
+  mapDispatchToProps
+)(CellToolbar);
