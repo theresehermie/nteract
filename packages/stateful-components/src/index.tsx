@@ -6,6 +6,7 @@ import CodeCell from "./cells/code-cell";
 import MarkdownCell from "./cells/markdown-cell";
 import RawCell from "./cells/raw-cell";
 import CellToolbar, { CellToolbarContext } from "./cells/toolbar";
+import StatusBar, { StatusBarContext } from "./notebook/status-bar";
 
 export {
   Cells,
@@ -13,7 +14,9 @@ export {
   MarkdownCell,
   RawCell,
   CellToolbar,
-  CellToolbarContext
+  CellToolbarContext,
+  StatusBar,
+  StatusBarContext
 };
 
 interface ComponentProps {

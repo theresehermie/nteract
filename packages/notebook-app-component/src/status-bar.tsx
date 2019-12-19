@@ -1,16 +1,11 @@
-import * as selectors from "@nteract/selectors";
-import { AppState, ContentRef, KernelRef } from "@nteract/types";
+import { ContentRef } from "@nteract/types";
 import { formatDistanceToNow } from "date-fns";
 import React from "react";
-import { connect } from "react-redux";
+import { StatusBar, StatusBarContext } from "@nteract/stateful-components";
 
-interface Props {
-  lastSaved?: Date | null;
-  kernelSpecDisplayName: string;
-  kernelStatus: string;
+interface ComponentProps {
+  contentRef: ContentRef;
 }
-
-const NOT_CONNECTED = "not connected";
 
 import styled from "styled-components";
 
@@ -40,96 +35,30 @@ export const Bar = styled.div`
   }
 `;
 
-export class StatusBar extends React.Component<Props> {
-  shouldComponentUpdate(nextProps: Props): boolean {
-    if (
-      this.props.lastSaved !== nextProps.lastSaved ||
-      this.props.kernelStatus !== nextProps.kernelStatus
-    ) {
-      return true;
-    }
-    return false;
-  }
-
+export default class StyledStatusBar extends React.Component<ComponentProps> {
   render() {
-    const name = this.props.kernelSpecDisplayName || "Loading...";
-
     return (
-      <Bar>
-        <RightStatus>
-          {this.props.lastSaved ? (
-            <p>
-              Last saved {formatDistanceToNow(new Date(this.props.lastSaved))}
-            </p>
-          ) : (
-            <p> Not saved yet </p>
+      <StatusBar contentRef={this.props.contentRef}>
+        <StatusBarContext.Consumer>
+          {context => (
+            <Bar>
+              <RightStatus>
+                {context.lastSaved ? (
+                  <p>Last saved {formatDistanceToNow(context.lastSaved)}</p>
+                ) : (
+                  <p> Not saved yet </p>
+                )}
+              </RightStatus>
+              <LeftStatus>
+                <p>
+                  {context.kernelSpecDisplayName || "Loading..."} |{" "}
+                  {context.kernelStatus}
+                </p>
+              </LeftStatus>
+            </Bar>
           )}
-        </RightStatus>
-        <LeftStatus>
-          <p>
-            {name} | {this.props.kernelStatus}
-          </p>
-        </LeftStatus>
-      </Bar>
+        </StatusBarContext.Consumer>
+      </StatusBar>
     );
   }
 }
-
-interface InitialProps {
-  contentRef: ContentRef;
-}
-
-const makeMapStateToProps = (
-  initialState: AppState,
-  initialProps: InitialProps
-): ((state: AppState) => Props) => {
-  const { contentRef } = initialProps;
-
-  const mapStateToProps = (state: AppState) => {
-    const content = selectors.content(state, { contentRef });
-
-    if (!content || content.type !== "notebook") {
-      return {
-        kernelStatus: NOT_CONNECTED,
-        kernelSpecDisplayName: "no kernel",
-        lastSaved: null
-      };
-    }
-
-    const kernelRef = content.model.kernelRef;
-    let kernel = null;
-    if (kernelRef) {
-      kernel = selectors.kernel(state, { kernelRef });
-    }
-
-    const lastSaved = content && content.lastSaved ? content.lastSaved : null;
-
-    const kernelStatus =
-      kernel != null && kernel.status != null ? kernel.status : NOT_CONNECTED;
-
-    let kernelSpecDisplayName = " ";
-    if (kernelStatus === NOT_CONNECTED) {
-      kernelSpecDisplayName = "no kernel";
-    } else if (kernel != null && kernel.kernelSpecName != null) {
-      const kernelspec = selectors.kernelspecByName(state, {
-        name: kernel.kernelSpecName
-      });
-      kernelSpecDisplayName = kernelspec
-        ? kernelspec.displayName
-        : kernel.kernelSpecName;
-    } else if (content && content.type === "notebook") {
-      kernelSpecDisplayName =
-        selectors.notebook.displayName(content.model) || " ";
-    }
-
-    return {
-      kernelSpecDisplayName,
-      kernelStatus,
-      lastSaved
-    };
-  };
-
-  return mapStateToProps;
-};
-
-export default connect(makeMapStateToProps)(StatusBar);

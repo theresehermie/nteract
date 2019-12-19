@@ -19,7 +19,6 @@ export default class NotebookApp extends React.Component<ComponentProps> {
   render(): JSX.Element {
     return (
       <React.Fragment>
-        <NotebookHelmet contentRef={this.props.contentRef} />
         <Cells contentRef={this.props.contentRef}>
           {{
             code: (props: { id: string; contentRef: ContentRef }) => (
