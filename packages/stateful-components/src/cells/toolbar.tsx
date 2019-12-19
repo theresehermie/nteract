@@ -42,7 +42,7 @@ class CellToolbar extends React.Component<
 > {
   render() {
     return (
-      <div className="nteract-toolbar">
+      <div className="nteract-cell-toolbar">
         <CellToolbarContext.Provider value={this.props}>
           {this.props.children}
         </CellToolbarContext.Provider>
@@ -63,6 +63,7 @@ const makeMapStateToProps = (
     if (model && model.type === "notebook") {
       const cell = selectors.notebook.cellById(model, { id });
       if (cell) {
+        console.log(cell.toJS());
         type = cell.get<CellType>("cell_type", "code");
       }
     }

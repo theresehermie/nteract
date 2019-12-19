@@ -94,3 +94,74 @@
     color: var(--theme-cell-prompt-fg, black);
   }
 }
+
+.nteract-cell-toolbar {
+  background-color: var(--theme-cell-toolbar-bg);
+  opacity: 0.4;
+  transition: opacity 0.4s;
+}
+.nteract-cell-toolbar > div {
+  display: inline-block;
+}
+
+.nteract-cell-toolbar:hover {
+  opacity: 1;
+}
+
+@media print {
+  .nteract-cell-toolbar {
+    display: none;
+  }
+}
+
+.nteract-cell-toolbar button {
+  display: inline-block;
+
+  width: 22px;
+  height: 20px;
+  padding: 0px 4px;
+
+  text-align: center;
+
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.nteract-cell-toolbar span {
+  font-size: 15px;
+  line-height: 1;
+  color: var(--theme-cell-toolbar-fg);
+}
+
+.nteract-cell-toolbar button span:hover {
+  color: var(--theme-cell-toolbar-fg-hover);
+}
+
+.nteract-cell-toolbar .octicon {
+  transition: color 0.5s;
+}
+
+.nteract-cell-toolbar span.spacer {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 1px 5px 3px 5px;
+  height: 11px;
+}
+
+.nteract-cell-toolbar {
+  z-index: 9;
+  position: sticky; /* keep visible with large code cells that need scrolling */
+  float: right;
+  top: 0;
+  right: 0;
+  height: 34px;
+  margin: 0 0 0 -100%; /* allow code cell to completely overlap (underlap?) */
+  padding: 0 0 0 50px; /* give users extra room to move their mouse to the
+                          toolbar without causing the cell to go out of
+                          focus/hide the toolbar before they get there */
+}
+
+.nteract-cell.hidden .nteract-cell-toolbar {
+  display: none;
+}
