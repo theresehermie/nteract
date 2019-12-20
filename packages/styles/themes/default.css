@@ -101,6 +101,14 @@
   transition: opacity 0.4s;
 }
 
+:not(.selected) .nteract-cell-toolbar {
+  display: none;
+}
+
+.selected .nteract-cell-toolbar {
+  display: inline-block;
+}
+
 .nteract-cell-toolbar > div {
   display: inline-block;
 }
