@@ -44,7 +44,7 @@ export default class Toolbar extends React.PureComponent<
         <CellToolbarContext.Consumer>
           {(context: any) => (
             <React.Fragment>
-              {context.type !== "markdown" && (
+              {context.type !== "markdown" ? (
                 <button
                   onClick={context.executeCell}
                   title="execute cell"
@@ -54,7 +54,7 @@ export default class Toolbar extends React.PureComponent<
                     <TriangleRightOcticon />
                   </span>
                 </button>
-              )}
+              ) : null}
               <DropdownMenu
                 onDisplayChanged={(expanded: boolean) => {
                   this.setState({ moreActionsMenuExpanded: expanded });

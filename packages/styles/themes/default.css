@@ -69,13 +69,13 @@
   );
 }
 
-.nteract-cell.selected .nteract-cell-prompt {
+.nteract-cell-container.selected .nteract-cell-prompt {
   background-color: var(--theme-cell-prompt-bg-focus, hsl(0, 0%, 90%));
   color: var(--theme-cell-prompt-fg-focus, hsl(0, 0%, 51%));
 }
 
-.nteract-cell:hover:not(.selected).nteract-cell-prompt,
-.nteract-cell:active:not(.selected) .nteract-cell-prompt {
+.nteract-cell-container:hover:not(.selected).nteract-cell-prompt,
+.nteract-cell-container:active:not(.selected) .nteract-cell-prompt {
   background-color: var(--theme-cell-prompt-bg-hover, hsl(0, 0%, 94%));
   color: var(--theme-cell-prompt-fg-hover, hsl(0, 0%, 15%));
 }
@@ -86,26 +86,25 @@
 
 @media print {
   /* make sure all cells look the same in print regarless of focus */
-  .nteract-cell .nteract-cell-prompt,
-  .nteract-cell.selected .nteract-cell-prompt,
-  .nteract-cell:focus .nteract-cell-prompt,
-  .nteract-cell:hover:not(.selected) .nteract-cell-prompt {
+  .nteract-cell-container .nteract-cell-prompt,
+  .nteract-cell-container.selected .nteract-cell-prompt,
+  .nteract-cell-container:focus .nteract-cell-prompt,
+  .nteract-cell-container:hover:not(.selected) .nteract-cell-prompt {
     background-color: var(--theme-cell-prompt-bg, white);
     color: var(--theme-cell-prompt-fg, black);
   }
 }
 
 .nteract-cell-toolbar {
-  background-color: var(--theme-cell-toolbar-bg);
   opacity: 0.4;
   transition: opacity 0.4s;
 }
 
-:not(.selected) .nteract-cell-toolbar {
+.nteract-cell-container:not(.selected) .nteract-cell-toolbar {
   display: none;
 }
 
-.selected .nteract-cell-toolbar {
+.nteract-cell-container.selected .nteract-cell-toolbar {
   display: inline-block;
 }
 

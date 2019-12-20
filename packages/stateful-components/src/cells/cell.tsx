@@ -56,7 +56,9 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
       cell: this.props.cell,
       id: this.props.id,
       contentRef: this.props.contentRef,
-      className: `${this.props.selected ? "selected" : ""}`
+      className: `nteract-cell-container ${
+        this.props.selected ? "selected" : ""
+      }`
     });
   }
 }

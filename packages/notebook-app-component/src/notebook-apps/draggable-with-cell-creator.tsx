@@ -34,7 +34,9 @@ const decorate = (
       <DraggableCell id={id} contentRef={contentRef}>
         <HijackScroll id={id} contentRef={contentRef}>
           <CellCreator id={id} contentRef={contentRef}>
-            {children}
+            <UndoableCellDelete id={id} contentRef={contentRef}>
+              {children}
+            </UndoableCellDelete>
           </CellCreator>
         </HijackScroll>
       </DraggableCell>
