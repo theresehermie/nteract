@@ -19,7 +19,7 @@ interface NamedMDCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  cell?: ImmutableCell;
+
   cell_type?: "markdown";
   children?: NamedMDCellSlots;
 }
@@ -27,6 +27,7 @@ interface ComponentProps {
 interface StateProps {
   isCellFocused: boolean;
   isEditorFocused: boolean;
+  cell: ImmutableCell;
 }
 
 interface DispatchProps {
@@ -62,7 +63,7 @@ export class PureMarkdownCell extends React.Component<
 
     return (
       <div className="nteract-md-cell nteract-cell">
-        {toolbar}
+        {toolbar && toolbar()}
         <MarkdownPreviewer
           focusAbove={focusAboveCell}
           focusBelow={focusBelowCell}
@@ -93,13 +94,16 @@ export const makeMapStateToProps = (
     const model = selectors.model(state, { contentRef });
     let isCellFocused = false;
     let isEditorFocused = false;
+    let cell;
 
     if (model && model.type === "notebook") {
+      cell = selectors.notebook.cellById(model, { id });
       isCellFocused = model.cellFocused === id;
       isEditorFocused = model.editorFocused === id;
     }
 
     return {
+      cell,
       isCellFocused,
       isEditorFocused
     };

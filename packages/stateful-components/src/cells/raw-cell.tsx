@@ -43,7 +43,7 @@ export class PureRawCell extends React.Component<
 
     return (
       <div className="nteract-raw-cell nteract-cell">
-        {toolbar}
+        {toolbar && toolbar()}
         <Source className="nteract-cell-source">
           <Editor id={id} contentRef={contentRef}>
             {editor ? (
