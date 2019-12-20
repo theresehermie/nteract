@@ -23,6 +23,25 @@ interface ComponentProps {
   contentRef: ContentRef;
 }
 
+const decorate = (
+  id: string,
+  contentRef: ContentRef,
+  cell_type: CellType,
+  children: React.ReactNode
+) => {
+  return (
+    <div cell_type={cell_type}>
+      <DraggableCell id={id} contentRef={contentRef}>
+        <HijackScroll id={id} contentRef={contentRef}>
+          <CellCreator id={id} contentRef={contentRef}>
+            {children}
+          </CellCreator>
+        </HijackScroll>
+      </DraggableCell>
+    </div>
+  );
+};
+
 export class NotebookApp extends React.Component<ComponentProps> {
   render(): JSX.Element {
     return (
@@ -30,93 +49,54 @@ export class NotebookApp extends React.Component<ComponentProps> {
         <Themer>
           <Cells contentRef={this.props.contentRef}>
             {{
-              code: (props: { id: string; contentRef: ContentRef }) => (
-                <div cell_type="code">
-                  <UndoableCellDelete
-                    id={props.id}
-                    contentRef={props.contentRef}
-                  >
-                    <DraggableCell id={props.id} contentRef={props.contentRef}>
-                      <HijackScroll id={props.id} contentRef={props.contentRef}>
-                        <CellCreator
+              code: (props: { id: string; contentRef: ContentRef }) =>
+                decorate(
+                  props.id,
+                  props.contentRef,
+                  "code",
+                  <CodeCell id={props.id} contentRef={props.contentRef}>
+                    {{
+                      toolbar: () => (
+                        <CellToolbar
                           id={props.id}
                           contentRef={props.contentRef}
-                        >
-                          <CodeCell id={props.id} contentRef={props.contentRef}>
-                            {{
-                              toolbar: () => (
-                                <CellToolbar
-                                  id={props.id}
-                                  contentRef={props.contentRef}
-                                />
-                              )
-                            }}
-                          </CodeCell>
-                        </CellCreator>
-                      </HijackScroll>
-                    </DraggableCell>
-                  </UndoableCellDelete>
-                </div>
-              ),
-              markdown: (props: { id: string; contentRef: ContentRef }) => (
-                <div cell_type="markdown">
-                  <UndoableCellDelete
-                    id={props.id}
-                    contentRef={props.contentRef}
-                  >
-                    <DraggableCell id={props.id} contentRef={props.contentRef}>
-                      <HijackScroll id={props.id} contentRef={props.contentRef}>
-                        <CellCreator
+                        />
+                      )
+                    }}
+                  </CodeCell>
+                ),
+              markdown: (props: { id: string; contentRef: ContentRef }) =>
+                decorate(
+                  props.id,
+                  props.contentRef,
+                  "markdown",
+                  <MarkdownCell id={props.id} contentRef={props.contentRef}>
+                    {{
+                      toolbar: () => (
+                        <CellToolbar
                           id={props.id}
                           contentRef={props.contentRef}
-                        >
-                          <MarkdownCell
-                            id={props.id}
-                            contentRef={props.contentRef}
-                          >
-                            {{
-                              toolbar: () => (
-                                <CellToolbar
-                                  id={props.id}
-                                  contentRef={props.contentRef}
-                                />
-                              )
-                            }}
-                          </MarkdownCell>
-                        </CellCreator>
-                      </HijackScroll>
-                    </DraggableCell>
-                  </UndoableCellDelete>
-                </div>
-              ),
-              raw: (props: { id: string; contentRef: ContentRef }) => (
-                <div cell_type="raw">
-                  <UndoableCellDelete
-                    id={props.id}
-                    contentRef={props.contentRef}
-                  >
-                    <DraggableCell id={props.id} contentRef={props.contentRef}>
-                      <HijackScroll id={props.id} contentRef={props.contentRef}>
-                        <CellCreator
+                        />
+                      )
+                    }}
+                  </MarkdownCell>
+                ),
+              raw: (props: { id: string; contentRef: ContentRef }) =>
+                decorate(
+                  props.id,
+                  props.contentRef,
+                  "raw",
+                  <RawCell id={props.id} contentRef={props.contentRef}>
+                    {{
+                      toolbar: () => (
+                        <CellToolbar
                           id={props.id}
                           contentRef={props.contentRef}
-                        >
-                          <RawCell id={props.id} contentRef={props.contentRef}>
-                            {{
-                              toolbar: () => (
-                                <CellToolbar
-                                  id={props.id}
-                                  contentRef={props.contentRef}
-                                />
-                              )
-                            }}
-                          </RawCell>
-                        </CellCreator>
-                      </HijackScroll>
-                    </DraggableCell>
-                  </UndoableCellDelete>
-                </div>
-              )
+                        />
+                      )
+                    }}
+                  </RawCell>
+                )
             }}
           </Cells>
           <StatusBar contentRef={this.props.contentRef} />
