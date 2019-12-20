@@ -13,6 +13,7 @@ interface ComponentProps {
 
 interface StateProps {
   cell?: ImmutableCell;
+  selected: boolean;
 }
 
 export class Cell extends React.Component<ComponentProps & StateProps> {
@@ -55,7 +56,7 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
       cell: this.props.cell,
       id: this.props.id,
       contentRef: this.props.contentRef,
-      className: "nteract-cell"
+      className: `${this.props.selected ? "selected" : ""}`
     });
   }
 }
@@ -68,12 +69,14 @@ export const makeMapStateToProps = (
     const { id, contentRef } = ownProps;
     const model = selectors.model(state, { contentRef });
     let cell = undefined;
+    let selected = false;
 
     if (model && model.type === "notebook") {
       cell = selectors.notebook.cellById(model, { id });
+      selected = selectors.notebook.cellFocused(model) === id;
     }
 
-    return { cell };
+    return { cell, selected };
   };
   return mapStateToProps;
 };

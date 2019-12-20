@@ -103,6 +103,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
 
     return (
       <div className="nteract-code-cell nteract-cell">
+        {toolbar && toolbar()}
         <Input id={id} contentRef={contentRef}>
           {prompt({ id, contentRef })}
           <Source className="nteract-cell-source">
@@ -114,7 +115,6 @@ export default class CodeCell extends React.Component<ComponentProps> {
         {pagers({ id, contentRef })}
         {outputs({ id, contentRef })}
         {inputPrompts({ id, contentRef })}
-        {toolbar && toolbar()}
       </div>
     );
   }

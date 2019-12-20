@@ -100,6 +100,7 @@
   opacity: 0.4;
   transition: opacity 0.4s;
 }
+
 .nteract-cell-toolbar > div {
   display: inline-block;
 }
