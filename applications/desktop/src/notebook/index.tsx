@@ -13,6 +13,9 @@ import "codemirror/lib/codemirror.css";
 import "@nteract/styles/app.css";
 import "@nteract/styles/global-variables.css";
 
+import "@nteract/styles/themes/base.css";
+import "@nteract/styles/themes/default.css";
+
 import "@nteract/styles/editor-overrides.css";
 
 import { CodeMirrorCSS, ShowHintCSS } from "@nteract/editor";
@@ -23,7 +26,16 @@ import GeoJSONTransform from "@nteract/transform-geojson";
 import ModelDebug from "@nteract/transform-model-debug";
 import PlotlyTransform from "@nteract/transform-plotly";
 import VDOMDisplay from "@nteract/transform-vdom";
-import { Vega2, Vega3, Vega4, Vega5, VegaLite1, VegaLite2, VegaLite3, VegaLite4 } from "@nteract/transform-vega";
+import {
+  Vega2,
+  Vega3,
+  Vega4,
+  Vega5,
+  VegaLite1,
+  VegaLite2,
+  VegaLite3,
+  VegaLite4
+} from "@nteract/transform-vega";
 
 import { ipcRenderer as ipc, remote } from "electron";
 import { mathJaxPath } from "mathjax-electron";
