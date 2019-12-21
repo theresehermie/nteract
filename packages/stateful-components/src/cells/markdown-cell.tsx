@@ -19,15 +19,14 @@ interface NamedMDCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-
-  cell_type?: "markdown";
+  cell_type: "markdown";
   children?: NamedMDCellSlots;
 }
 
 interface StateProps {
   isCellFocused: boolean;
   isEditorFocused: boolean;
-  cell: ImmutableCell;
+  cell?: ImmutableCell;
 }
 
 interface DispatchProps {
@@ -40,6 +39,10 @@ interface DispatchProps {
 export class PureMarkdownCell extends React.Component<
   ComponentProps & DispatchProps & StateProps
 > {
+  static defaultProps = {
+    cell_type: "markdown"
+  };
+
   render() {
     const { contentRef, id, cell, children } = this.props;
 
@@ -141,9 +144,5 @@ const MarkdownCell = connect(
   makeMapStateToProps,
   makeMapDispatchToProps
 )(PureMarkdownCell);
-
-MarkdownCell.defaultProps = {
-  cell_type: "markdown"
-};
 
 export default MarkdownCell;

@@ -8,7 +8,7 @@ import { ImmutableCell } from "@nteract/commutable/src";
 interface ComponentProps {
   id: string;
   contentRef: string;
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 interface StateProps {
@@ -19,7 +19,7 @@ interface StateProps {
 export class Cell extends React.Component<ComponentProps & StateProps> {
   render() {
     // We must pick only one child to render
-    let chosenOne: React.ReactChild | null = null;
+    let chosenOne: React.ReactNode | null = null;
 
     if (!this.props.cell) {
       return null;
@@ -29,6 +29,10 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
 
     // Find the first child element that matches something in this.props.data
     React.Children.forEach(this.props.children, child => {
+      if (!child) {
+        return;
+      }
+
       if (typeof child === "string" || typeof child === "number") {
         return;
       }
@@ -38,7 +42,7 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
         return;
       }
 
-      if (child.props && child.props.cell_type) {
+      if (child && child.props && child.props.cell_type) {
         const child_cell_type = child.props.cell_type;
 
         chosenOne = child_cell_type === cell_type ? child : null;

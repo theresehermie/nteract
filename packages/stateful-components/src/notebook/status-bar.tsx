@@ -14,7 +14,7 @@ interface ComponentProps {
 
 interface StateProps {
   kernelStatus: KernelStatus;
-  kernelRef?: KernelRef;
+  kernelRef?: KernelRef | null;
   lastSaved?: Date;
   kernelSpecDisplayName?: string;
 }
@@ -40,15 +40,20 @@ const makeMapStateToProps = (
   const mapStateToProps = (state: AppState) => {
     const { contentRef } = ownProps;
     const model = selectors.model(state, { contentRef });
-    let kernelRef, lastSaved, kernelSpecDisplayName;
+    const content = selectors.content(state, { contentRef });
+    let kernelRef, lastSaved, kernelSpecDisplayName, kernel;
     let kernelStatus = KernelStatus.NotConnected;
     if (model && model.type === "notebook") {
       /** Retrieve the kernel we are currently connected to for this content. */
       kernelRef = model.kernelRef;
-      const kernel = selectors.kernel(state, { kernelRef });
+      if (kernelRef) {
+        kernel = selectors.kernel(state, { kernelRef });
+      }
+
       /** Update the kernel status if the kernel is connected and it is set. */
       if (kernel && kernel.status !== null) {
-        kernelStatus = kernel.status;
+        kernelStatus =
+          (kernel.status as KernelStatus) || KernelStatus.NotConnected;
       }
       /** Update the kernel display name if we have a kernel spec.. */
       if (kernel && kernel.kernelSpecName) {
@@ -62,10 +67,11 @@ const makeMapStateToProps = (
         /** Fall back on the display name in the notebook. */
         kernelSpecDisplayName = selectors.notebook.displayName(model);
       }
-      /** Get the last saved date of the content. */
-      if (model && model.lastSaved) {
-        lastSaved = new Date(model.lastSaved);
-      }
+    }
+
+    /** Get the last saved date of the content. */
+    if (content && content.lastSaved) {
+      lastSaved = new Date(content.lastSaved);
     }
 
     return {

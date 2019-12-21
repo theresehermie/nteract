@@ -19,7 +19,7 @@ interface ComponentProps {
   id: string;
   contentRef: ContentRef;
   cell?: ImmutableCell;
-  cell_type?: "raw";
+  cell_type: "raw";
   children?: NamedRawCellSlots;
 }
 
@@ -31,6 +31,10 @@ interface DispatchProps {
 export class PureRawCell extends React.Component<
   ComponentProps & DispatchProps
 > {
+  static defaultProps = {
+    cell_type: "raw"
+  };
+
   render() {
     const { id, contentRef, children } = this.props;
 
@@ -84,9 +88,5 @@ const RawCell = connect<void, DispatchProps, ComponentProps, AppState>(
   null,
   makeMapDispatchToProps
 )(PureRawCell);
-
-RawCell.defaultProps = {
-  cell_type: "raw"
-};
 
 export default RawCell;

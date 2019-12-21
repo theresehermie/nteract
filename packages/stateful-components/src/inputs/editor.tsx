@@ -26,6 +26,10 @@ export class Editor extends React.Component<ComponentProps & StateProps> {
 
     // Find the first child element that matches something in this.props.data
     React.Children.forEach(this.props.children, child => {
+      if (!child) {
+        return;
+      }
+
       if (typeof child === "string" || typeof child === "number") {
         return;
       }

@@ -8,6 +8,7 @@ import { Output } from "@nteract/outputs";
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
+  children: React.ReactNode;
 }
 
 interface StateProps {
