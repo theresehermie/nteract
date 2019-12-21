@@ -15,7 +15,6 @@ import {
 import { ContentRef } from "@nteract/types";
 import * as React from "react";
 
-import styled, { StyledComponent } from "styled-components";
 import { CellToolbar, CellToolbarContext } from "@nteract/stateful-components";
 
 export interface ComponentProps {
