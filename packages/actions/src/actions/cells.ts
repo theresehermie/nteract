@@ -33,12 +33,9 @@ export function clearAllOutputs(payload: {
   };
 }
 
-export function moveCell(payload: {
-  id: string;
-  destinationId: string;
-  above: boolean;
-  contentRef: ContentRef;
-}): actionTypes.MoveCell {
+export function moveCell(
+  payload: actionTypes.MoveCell["payload"]
+): actionTypes.MoveCell {
   return {
     type: actionTypes.MOVE_CELL,
     payload
@@ -258,10 +255,9 @@ export function updateCellStatus(payload: {
 
 /* Unlike focus next & previous, to set focus, we require an ID,
      because the others are based on there already being a focused cell */
-export function focusCell(payload: {
-  id: CellId;
-  contentRef: ContentRef;
-}): actionTypes.FocusCell {
+export function focusCell(
+  payload: actionTypes.FocusCell["payload"]
+): actionTypes.FocusCell {
   return {
     type: actionTypes.FOCUS_CELL,
     payload

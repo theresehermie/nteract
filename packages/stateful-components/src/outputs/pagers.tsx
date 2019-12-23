@@ -17,7 +17,7 @@ interface StateProps {
 
 export class Pagers extends React.PureComponent<ComponentProps & StateProps> {
   render() {
-    const { pagers, children } = this.props;
+    const { pagers } = this.props;
     return (
       <div className="nteract-cell-pagers">
         {pagers.map(pager => (

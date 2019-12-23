@@ -1,22 +1,22 @@
-import React from "react";
+import { CellType } from "@nteract/commutable";
+import { ContentRef } from "@nteract/core";
 import {
   Cells,
   CodeCell,
   MarkdownCell,
   RawCell
 } from "@nteract/stateful-components";
-import { ContentRef } from "@nteract/core";
-import { CellType } from "@nteract/commutable";
+import React from "react";
 
-import CellToolbar from "../derived-components/toolbar";
 import StatusBar from "../derived-components/status-bar";
+import CellToolbar from "../derived-components/toolbar";
 
 import { DragDropContext as dragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
+import CellCreator from "../decorators/cell-creator";
 import DraggableCell from "../decorators/draggable";
 import HijackScroll from "../decorators/hijack-scroll";
-import CellCreator from "../decorators/cell-creator";
 import Themer from "../decorators/themer";
 import UndoableCellDelete from "../decorators/undoable/undoable-cell-delete";
 

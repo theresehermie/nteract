@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import React from "react";
 
 import { ImmutableCell } from "@nteract/commutable";
@@ -14,7 +13,6 @@ import Outputs from "../outputs";
 import InputPrompts from "../outputs/input-prompts";
 import Pagers from "../outputs/pagers";
 import TransformMedia from "../outputs/transform-media";
-import { inputRequests } from "@nteract/messaging/src";
 
 interface NamedCodeCellSlots {
   editor?: () => JSX.Element;

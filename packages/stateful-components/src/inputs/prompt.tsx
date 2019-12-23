@@ -16,7 +16,6 @@ interface StateProps {
 
 export class Prompt extends React.Component<ComponentProps, StateProps> {
   render() {
-    const { children } = this.props;
     return (
       <div className="nteract-cell-prompt">
         {React.Children.map(this.props.children, child => {
@@ -31,7 +30,7 @@ export class Prompt extends React.Component<ComponentProps, StateProps> {
             return;
           }
 
-          if (!child || typeof child !== "object" || !("props" in child)) {
+          if (typeof child !== "object" || !("props" in child)) {
             return;
           }
 

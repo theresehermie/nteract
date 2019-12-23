@@ -1,4 +1,3 @@
-import Immutable from "immutable";
 import React from "react";
 import { connect } from "react-redux";
 
@@ -46,11 +45,11 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
         return;
       }
 
-      if (!child || typeof child !== "object" || !("props" in child)) {
+      if (typeof child !== "object" || !("props" in child)) {
         return;
       }
 
-      if (child && child.props && child.props.cell_type) {
+      if (child.props && child.props.cell_type) {
         const child_cell_type = child.props.cell_type;
 
         chosenOne = child_cell_type === cell_type ? child : null;

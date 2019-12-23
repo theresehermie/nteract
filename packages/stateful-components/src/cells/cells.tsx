@@ -8,7 +8,6 @@ import Cell from "./cell";
 import CodeCell from "./code-cell";
 import MarkdownCell from "./markdown-cell";
 import RawCell from "./raw-cell";
-import { defaults } from "codemirror";
 
 interface NamedCellSlots {
   code?: (props: { id: string; contentRef: string }) => JSX.Element;
