@@ -31,10 +31,6 @@ interface DispatchProps {
 export class PureRawCell extends React.Component<
   ComponentProps & DispatchProps
 > {
-  static defaultProps = {
-    cell_type: "raw"
-  };
-
   render() {
     const { id, contentRef, children } = this.props;
 

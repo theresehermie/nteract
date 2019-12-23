@@ -8,7 +8,7 @@ import { ImmutableCell } from "@nteract/commutable/src";
 interface ComponentProps {
   id: string;
   contentRef: string;
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 interface StateProps {
@@ -33,12 +33,20 @@ export class Cell extends React.Component<ComponentProps & StateProps> {
         return;
       }
 
-      if (typeof child === "string" || typeof child === "number") {
+      if (
+        typeof child === "string" ||
+        typeof child === "number" ||
+        typeof child === "boolean"
+      ) {
         return;
       }
 
       if (chosenOne) {
         // Already have a selection
+        return;
+      }
+
+      if (!child || typeof child !== "object" || !("props" in child)) {
         return;
       }
 

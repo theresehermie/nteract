@@ -6,7 +6,7 @@ import { ContentRef, AppState, selectors } from "@nteract/core";
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 interface StateProps {
@@ -23,9 +23,18 @@ export class Prompt extends React.Component<ComponentProps, StateProps> {
           if (!child) {
             return;
           }
-          if (typeof child === "string" || typeof child === "number") {
+          if (
+            typeof child === "string" ||
+            typeof child === "number" ||
+            typeof child === "boolean"
+          ) {
             return;
           }
+
+          if (!child || typeof child !== "object" || !("props" in child)) {
+            return;
+          }
+
           return React.cloneElement(child, this.props);
         })}
       </div>

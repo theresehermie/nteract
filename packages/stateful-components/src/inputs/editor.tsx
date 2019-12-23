@@ -39,6 +39,15 @@ export class Editor extends React.Component<ComponentProps & StateProps> {
         // Already have a selection
         return;
       }
+
+      if (
+        !childElement ||
+        typeof childElement !== "object" ||
+        !("props" in childElement)
+      ) {
+        return;
+      }
+
       if (childElement.props && childElement.props.editorType) {
         const child_editor_type = childElement.props.editorType;
 

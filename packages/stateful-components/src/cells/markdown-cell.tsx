@@ -19,7 +19,7 @@ interface NamedMDCellSlots {
 interface ComponentProps {
   id: string;
   contentRef: ContentRef;
-  cell_type: "markdown";
+  cell_type?: "markdown";
   children?: NamedMDCellSlots;
 }
 
@@ -39,10 +39,6 @@ interface DispatchProps {
 export class PureMarkdownCell extends React.Component<
   ComponentProps & DispatchProps & StateProps
 > {
-  static defaultProps = {
-    cell_type: "markdown"
-  };
-
   render() {
     const { contentRef, id, cell, children } = this.props;
 

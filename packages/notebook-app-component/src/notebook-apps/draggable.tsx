@@ -27,15 +27,16 @@ const decorate = (
   cell_type: CellType,
   children: React.ReactNode
 ) => {
-  return (
-    <div cell_type={cell_type}>
-      <DraggableCell id={id} contentRef={contentRef}>
-        <HijackScroll id={id} contentRef={contentRef}>
-          {children}
-        </HijackScroll>
-      </DraggableCell>
-    </div>
+  const Cell = () => (
+    <DraggableCell id={id} contentRef={contentRef}>
+      <HijackScroll id={id} contentRef={contentRef}>
+        {children}
+      </HijackScroll>
+    </DraggableCell>
   );
+
+  Cell.defaultProps = { cell_type };
+  return <Cell />;
 };
 
 export class NotebookApp extends React.Component<ComponentProps> {
@@ -49,7 +50,11 @@ export class NotebookApp extends React.Component<ComponentProps> {
                 props.id,
                 props.contentRef,
                 "code",
-                <CodeCell id={props.id} contentRef={props.contentRef}>
+                <CodeCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="code"
+                >
                   {{
                     toolbar: () => (
                       <CellToolbar
@@ -65,7 +70,11 @@ export class NotebookApp extends React.Component<ComponentProps> {
                 props.id,
                 props.contentRef,
                 "markdown",
-                <MarkdownCell id={props.id} contentRef={props.contentRef}>
+                <MarkdownCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="markdown"
+                >
                   {{
                     toolbar: () => (
                       <CellToolbar
@@ -81,7 +90,11 @@ export class NotebookApp extends React.Component<ComponentProps> {
                 props.id,
                 props.contentRef,
                 "raw",
-                <RawCell id={props.id} contentRef={props.contentRef}>
+                <RawCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="raw"
+                >
                   {{
                     toolbar: () => (
                       <CellToolbar

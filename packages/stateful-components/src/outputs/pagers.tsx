@@ -23,7 +23,14 @@ export class Pagers extends React.PureComponent<ComponentProps & StateProps> {
         {pagers.map(pager => (
           <RichMedia data={pager.data} metadata={pager.metadata}>
             {React.Children.map(this.props.children, child => {
-              if (typeof child === "string" || typeof child === "number") {
+              if (
+                typeof child === "string" ||
+                typeof child === "number" ||
+                typeof child === "boolean"
+              ) {
+                return;
+              }
+              if (!child || typeof child !== "object" || !("props" in child)) {
                 return;
               }
               return React.cloneElement(child, this.props);

@@ -35,13 +35,21 @@ export class Cells extends React.Component<StateProps & ComponentProps> {
 
     const defaults = {
       markdown: (props: CellProps) => (
-        <MarkdownCell id={props.id} contentRef={props.contentRef} />
+        <MarkdownCell
+          id={props.id}
+          contentRef={props.contentRef}
+          cell_type="markdown"
+        />
       ),
       code: (props: CellProps) => (
-        <CodeCell id={props.id} contentRef={props.contentRef} />
+        <CodeCell
+          id={props.id}
+          contentRef={props.contentRef}
+          cell_type="code"
+        />
       ),
       raw: (props: CellProps) => (
-        <RawCell id={props.id} contentRef={props.contentRef} />
+        <RawCell id={props.id} contentRef={props.contentRef} cell_type="raw" />
       )
     };
 

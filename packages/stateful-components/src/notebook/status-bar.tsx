@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 
 interface ComponentProps {
   contentRef: ContentRef;
+  children: React.ReactNode;
 }
 
 interface StateProps {
