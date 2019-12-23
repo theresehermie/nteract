@@ -184,7 +184,6 @@ const mapStateToProps = (state: AppState, ownProps: ComponentProps) => {
   if (model && model.type === "notebook") {
     const cellOrder = selectors.notebook.cellOrder(model);
     const cellIndex = cellOrder.findIndex(cellId => cellId === id);
-    console.log(cellIndex);
     first = cellIndex === 0;
   }
 

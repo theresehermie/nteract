@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import CellCreator, {
   CellCreatorMenu,
   PureCellCreator
-} from "../src/cell-creator";
+} from "../src/decorators/cell-creator";
 
 describe("CellCreatorView", () => {
   const createCell = jest.fn();
@@ -35,12 +35,12 @@ describe("CellCreatorView", () => {
   test("clicking text cell button invokes createCell", () => {
     const component = setup(null);
     component.find(".add-text-cell").simulate("click");
-    expect(createCell).toHaveBeenCalledWith("markdown");
+    expect(createCell).toHaveBeenCalledWith("markdown", false);
   });
   test("clicking code cell button invokes createCell", () => {
     const component = setup(null);
     component.find(".add-code-cell").simulate("click");
-    expect(createCell).toHaveBeenCalledWith("code");
+    expect(createCell).toHaveBeenCalledWith("code", false);
   });
 });
 
@@ -108,38 +108,13 @@ describe("CellCreatorProvider", () => {
       createCell("code");
     });
   });
-  test("createCell can add a cell above the current one", () => {
-    const store = fixtureStore();
-
-    const setup = (above, id) =>
-      mount(
-        <Provider store={store}>
-          <CellCreator above={above} id={id} />
-        </Provider>
-      );
-
-    return new Promise(resolve => {
-      const dispatch = action => {
-        expect(action.payload.id).toBe("test");
-        expect(action.payload.cellType).toBe("code");
-        expect(action.type).toBe(actions.CREATE_CELL_ABOVE);
-        resolve();
-      };
-      store.dispatch = dispatch;
-      const wrapper = setup(true, "test");
-      const createCell = wrapper
-        .findWhere(n => n.prop("createCell") !== undefined)
-        .prop("createCell");
-      createCell("code");
-    });
-  });
   test("createCell creates a new cell if cell has no id", () => {
     const store = fixtureStore();
 
-    const setup = (above, id) =>
+    const setup = id =>
       mount(
         <Provider store={store}>
-          <CellCreator above={above} id={id} />
+          <CellCreator id={id} />
         </Provider>
       );
 
@@ -150,7 +125,7 @@ describe("CellCreatorProvider", () => {
         resolve();
       };
       store.dispatch = dispatch;
-      const wrapper = setup(false, null);
+      const wrapper = setup(null);
       const createCell = wrapper
         .findWhere(n => n.prop("createCell") !== undefined)
         .prop("createCell");
