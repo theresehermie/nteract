@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { selectors, AppState } from "@nteract/core";
 import { ImmutableCell } from "@nteract/commutable/src";
+import { AppState, selectors } from "@nteract/core";
 
 interface ComponentProps {
   id: string;
@@ -81,7 +81,7 @@ export const makeMapStateToProps = (
   const mapStateToProps = (state: AppState): StateProps => {
     const { id, contentRef } = ownProps;
     const model = selectors.model(state, { contentRef });
-    let cell = undefined;
+    let cell;
     let selected = false;
 
     if (model && model.type === "notebook") {

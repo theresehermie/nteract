@@ -24,40 +24,46 @@ interface ComponentProps {
   contentRef: ContentRef;
 }
 
-const decorate = (
-  id: string,
-  contentRef: ContentRef,
-  cell_type: CellType,
-  children: React.ReactNode
-) => {
-  const Cell = () => (
-    <DraggableCell id={id} contentRef={contentRef}>
-      <HijackScroll id={id} contentRef={contentRef}>
-        <CellCreator id={id} contentRef={contentRef}>
-          <UndoableCellDelete id={id} contentRef={contentRef}>
-            {children}
-          </UndoableCellDelete>
-        </CellCreator>
-      </HijackScroll>
-    </DraggableCell>
-  );
+interface CellComponentProps {
+  contentRef: ContentRef;
+  id: string;
+  children: React.ReactNode;
+  cell_type: CellType;
+  className?: string;
+}
 
-  Cell.defaultProps = { cell_type };
-  return <Cell />;
-};
+class DecoratedCell extends React.PureComponent<CellComponentProps> {
+  render(): JSX.Element {
+    const { contentRef, id, children } = this.props;
+    return (
+      <div className={this.props.className}>
+        <DraggableCell id={id} contentRef={contentRef}>
+          <HijackScroll id={id} contentRef={contentRef}>
+            <CellCreator id={id} contentRef={contentRef}>
+              <UndoableCellDelete id={id} contentRef={contentRef}>
+                {children}
+              </UndoableCellDelete>
+            </CellCreator>
+          </HijackScroll>
+        </DraggableCell>
+      </div>
+    );
+  }
+}
 
-export class NotebookApp extends React.Component<ComponentProps> {
+export class NotebookApp extends React.PureComponent<ComponentProps> {
   render(): JSX.Element {
     return (
       <React.Fragment>
         <Themer>
           <Cells contentRef={this.props.contentRef}>
             {{
-              code: (props: { id: string; contentRef: ContentRef }) =>
-                decorate(
-                  props.id,
-                  props.contentRef,
-                  "code",
+              code: (props: { id: string; contentRef: ContentRef }) => (
+                <DecoratedCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="code"
+                >
                   <CodeCell
                     id={props.id}
                     contentRef={props.contentRef}
@@ -72,12 +78,14 @@ export class NotebookApp extends React.Component<ComponentProps> {
                       )
                     }}
                   </CodeCell>
-                ),
-              markdown: (props: { id: string; contentRef: ContentRef }) =>
-                decorate(
-                  props.id,
-                  props.contentRef,
-                  "markdown",
+                </DecoratedCell>
+              ),
+              markdown: (props: { id: string; contentRef: ContentRef }) => (
+                <DecoratedCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="markdown"
+                >
                   <MarkdownCell
                     id={props.id}
                     contentRef={props.contentRef}
@@ -92,12 +100,14 @@ export class NotebookApp extends React.Component<ComponentProps> {
                       )
                     }}
                   </MarkdownCell>
-                ),
-              raw: (props: { id: string; contentRef: ContentRef }) =>
-                decorate(
-                  props.id,
-                  props.contentRef,
-                  "raw",
+                </DecoratedCell>
+              ),
+              raw: (props: { id: string; contentRef: ContentRef }) => (
+                <DecoratedCell
+                  id={props.id}
+                  contentRef={props.contentRef}
+                  cell_type="raw"
+                >
                   <RawCell
                     id={props.id}
                     contentRef={props.contentRef}
@@ -112,7 +122,8 @@ export class NotebookApp extends React.Component<ComponentProps> {
                       )
                     }}
                   </RawCell>
-                )
+                </DecoratedCell>
+              )
             }}
           </Cells>
           <StatusBar contentRef={this.props.contentRef} />
