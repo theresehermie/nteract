@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import { AppState, ContentRef, actions, selectors } from "@nteract/core";
+import { actions, AppState, ContentRef, selectors } from "@nteract/core";
 
 interface ComponentProps {
   id: string;
@@ -14,11 +14,13 @@ interface StateProps {
   editorType: string;
   editorFocused: boolean;
   value: string;
-  channels: any;
+  kernel: any;
   kernelStatus: string;
+  cell_type: string;
+  contentRef: ContentRef;
 }
 
-export class Editor extends React.Component<ComponentProps & StateProps> {
+export class Editor extends React.PureComponent<ComponentProps & StateProps> {
   render() {
     const { editorType } = this.props;
 
@@ -65,8 +67,10 @@ export class Editor extends React.Component<ComponentProps & StateProps> {
     return React.cloneElement(chosenOne, {
       editorFocused: this.props.editorFocused,
       value: this.props.value,
-      channels: this.props.channels,
+      kernel: this.props.kernel,
       kernelStatus: this.props.kernelStatus,
+      cell_type: this.props.cell_type,
+      contentRef: this.props.contentRef,
       editorType: this.props.editorType,
       className: "nteract-cell-editor"
     });
@@ -82,20 +86,21 @@ export const makeMapStateToProps = (
     const model = selectors.model(state, { contentRef });
 
     let editorFocused = false;
-    let channels = null;
+    let kernel = null;
     let kernelStatus = "not connected";
     let value = "";
-    let editorType = "codemirror";
+    let cell_type = "code";
+    const editorType = "codemirror";
 
     if (model && model.type === "notebook") {
       const cell = selectors.notebook.cellById(model, { id });
       if (cell) {
         editorFocused = model.editorFocused === id;
         value = cell.get("source", "");
-        if (cell.cell_type === "code") {
-          const kernel = selectors.kernelByContentRef(state, { contentRef });
+        cell_type = cell.get("cell_type", "code");
+        if (cell.get("cell_type", "code") === "code") {
+          kernel = selectors.kernelByContentRef(state, { contentRef });
           if (kernel) {
-            channels = kernel.channels;
             kernelStatus = kernel.status || "not connected";
           }
         }
@@ -105,9 +110,11 @@ export const makeMapStateToProps = (
     return {
       editorFocused,
       value,
-      channels,
+      kernel,
       kernelStatus,
-      editorType
+      editorType,
+      cell_type,
+      contentRef
     };
   };
 

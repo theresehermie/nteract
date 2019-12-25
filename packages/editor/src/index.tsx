@@ -33,7 +33,11 @@ import { Tooltip } from "./components/tooltip";
 import CodeMirrorCSS from "./vendored/codemirror";
 import ShowHintCSS from "./vendored/show-hint";
 
+import { connect } from "react-redux";
+
 export { CodeMirrorCSS, ShowHintCSS };
+
+import { selectors } from "@nteract/core";
 
 function normalizeLineEndings(str: string): string {
   if (!str) {
@@ -56,10 +60,8 @@ export type CodeMirrorEditorProps = {
   // _Our_ theme, not the codemirror one we use
   theme: string;
   channels?: Channels | null;
-  // TODO: We only check if this is idle, so the completion provider should only
-  //       care about this when kernelStatus === idle _and_ we're the active cell
-  //       could instead call it `canTriggerCompletion` and reduce our current re-renders
   kernelStatus: string;
+  kernel?: any;
   onChange?: (value: string, change: EditorChangeLinkedList) => void;
   onFocusChange?: (focused: boolean) => void;
   value: string;
@@ -77,7 +79,7 @@ interface CodeCompletionEvent {
   debounce: boolean;
 }
 
-export default class CodeMirrorEditor extends React.PureComponent<
+export class CodeMirrorEditor extends React.PureComponent<
   CodeMirrorEditorProps,
   CodeMirrorEditorState
 > {
@@ -481,3 +483,59 @@ export default class CodeMirrorEditor extends React.PureComponent<
     );
   }
 }
+
+const markdownMode = {
+  name: "gfm",
+  tokenTypeOverrides: {
+    emoji: "emoji"
+  }
+};
+
+const rawMode = {
+  name: "text/plain",
+  tokenTypeOverrides: {
+    emoji: "emoji"
+  }
+};
+
+const makeMapStateToProps = (
+  initialState: AppState,
+  ownProps: CodeMirrorEditorProps
+) => {
+  const { cell_type, contentRef, kernel } = ownProps;
+  const mapStateToProps = (state: AppState) => {
+    const model = selectors.model(state, { contentRef });
+    const lineWrapping = true;
+    let mode;
+
+    switch (cell_type) {
+      case "markdown":
+        mode = markdownMode;
+        break;
+      case "code":
+        mode =
+          kernel && kernel.info
+            ? kernel.info.codemirrorMode
+            : selectors.notebook.codeMirrorMode(model);
+        break;
+      default:
+        mode = rawMode;
+        break;
+    }
+    return {
+      lineWrapping,
+      mode
+    };
+  };
+  return mapStateToProps;
+};
+
+const ConnectedCodeMirrorEditor = connect(makeMapStateToProps)(
+  CodeMirrorEditor
+);
+
+ConnectedCodeMirrorEditor.defaultProps = {
+  editorType: "codemirror"
+};
+
+export default ConnectedCodeMirrorEditor;
