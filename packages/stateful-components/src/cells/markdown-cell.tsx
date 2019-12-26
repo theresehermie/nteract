@@ -7,8 +7,8 @@ import CodeMirrorEditor from "@nteract/editor";
 import { MarkdownPreviewer } from "@nteract/markdown";
 import { Source } from "@nteract/presentational-components";
 
-import Editor from "../inputs/editor";
 import { ImmutableCell } from "@nteract/commutable/src";
+import Editor from "../inputs/editor";
 
 interface NamedMDCellSlots {
   editor?: () => JSX.Element;
@@ -51,7 +51,7 @@ export class PureMarkdownCell extends React.Component<
     } = this.props;
 
     const defaults = {
-      editor: () => <CodeMirrorEditor />
+      editor: () => <CodeMirrorEditor editorType="codemirror" />
     };
 
     const editor = children?.editor || defaults.editor;

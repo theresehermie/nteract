@@ -3,7 +3,7 @@ import { mount } from "enzyme";
 import React from "react";
 import { empty, Subject } from "rxjs";
 
-import Editor from "../src/";
+import { CodeMirrorEditor } from "../src/";
 
 const complete = require("../src/jupyter/complete");
 const tooltip = require("../src/jupyter/tooltip");
@@ -14,7 +14,9 @@ describe("editor.hint CodeMirror callback", () => {
   it("eventually calls complete.codeComplete", () => {
     const channels = {};
 
-    const editorWrapper = mount(<Editor completion channels={channels} />);
+    const editorWrapper = mount(
+      <CodeMirrorEditor completion channels={channels} />
+    );
 
     expect(editorWrapper).not.toBeNull();
 
@@ -36,7 +38,9 @@ describe("editor.hint CodeMirror callback", () => {
   it("collapses multiple calls into one via debouncing", () => {
     const channels = {};
 
-    const editorWrapper = mount(<Editor completion channels={channels} />);
+    const editorWrapper = mount(
+      <CodeMirrorEditor completion channels={channels} />
+    );
 
     expect(editorWrapper).not.toBeNull();
 
@@ -61,7 +65,9 @@ describe("editor.hint CodeMirror callback", () => {
   it("can opt out of debouncing my mutating debounceNextCompletionRequest", () => {
     const channels = {};
 
-    const editorWrapper = mount(<Editor completion channels={channels} />);
+    const editorWrapper = mount(
+      <CodeMirrorEditor completion channels={channels} />
+    );
 
     expect(editorWrapper).not.toBeNull();
 
@@ -88,7 +94,9 @@ describe("editor.hint CodeMirror callback", () => {
   it("debounceNextCompletionRequest discards queued debounced events", () => {
     const channels = {};
 
-    const editorWrapper = mount(<Editor completion channels={channels} />);
+    const editorWrapper = mount(
+      <CodeMirrorEditor completion channels={channels} />
+    );
 
     expect(editorWrapper).not.toBeNull();
 
@@ -124,7 +132,7 @@ describe("editor.hint CodeMirror callback", () => {
 
     const channels = mockSocket;
 
-    const editorWrapper = mount(<Editor channels={channels} />);
+    const editorWrapper = mount(<CodeMirrorEditor channels={channels} />);
     expect(editorWrapper).not.toBeNull();
 
     const editor = editorWrapper.instance();
@@ -139,9 +147,9 @@ describe("editor.hint CodeMirror callback", () => {
   });
 });
 
-describe("Editor", () => {
+describe("CodeMirrorEditor", () => {
   it("handles cursor blinkery changes", () => {
-    const editorWrapper = mount(<Editor cursorBlinkRate={531} />);
+    const editorWrapper = mount(<CodeMirrorEditor cursorBlinkRate={531} />);
     const instance = editorWrapper.instance();
     const cm = instance.cm;
     expect(cm.options.cursorBlinkRate).toBe(531);

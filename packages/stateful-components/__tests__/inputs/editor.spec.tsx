@@ -17,7 +17,10 @@ describe("makeMapStateToProps", () => {
       editorFocused: false,
       channels: null,
       kernelStatus: "not connected",
-      value: ""
+      value: "",
+      kernel: null,
+      cell_type: "code",
+      contentRef: "anyContentRef"
     });
   });
   it("returns kernel and channels if input cell is code cell", () => {

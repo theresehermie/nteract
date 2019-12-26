@@ -28,9 +28,9 @@ interface ComponentProps {
 }
 
 interface StateProps {
-  cellOrder: Immutable.List<string>;
-  cellMap: Immutable.Map<string, any>;
-  focusedCell: string;
+  cellOrder?: Immutable.List<string>;
+  cellMap?: Immutable.Map<string, any>;
+  focusedCell?: string | null;
 }
 
 interface DispatchProps {
@@ -121,13 +121,16 @@ export class NotebookApp extends React.PureComponent<NotebookProps> {
 
     // NOTE: Order matters here because we need it to execute _before_ we
     // focus the next cell
-    executeFocusedCell({ contentRef });
+    executeFocusedCell();
 
     if (e.shiftKey) {
       /** Get the next cell and check if it is a markdown cell. */
-      const focusedCellIndex = cellOrder.indexOf(focusedCell);
-      const nextCellId = cellOrder.get(focusedCellIndex + 1);
-      const nextCell = cellMap.get(nextCellId);
+      let nextCellId;
+      let focusedCellIndex;
+      if (cellOrder && focusedCell) {
+        focusedCellIndex = cellOrder.indexOf(focusedCell);
+        nextCellId = cellOrder.get(focusedCellIndex + 1);
+      }
 
       /** Always focus the next cell. */
       focusNextCell({
@@ -138,14 +141,17 @@ export class NotebookApp extends React.PureComponent<NotebookProps> {
 
       /** Only focus the next editor if it is a code cell or a cell
        * created at the bottom of the notebook. */
-      if (
-        nextCell === undefined ||
-        (nextCell && nextCell.get("cell_type") === "code")
-      ) {
-        focusNextCellEditor({
-          id: focusedCell || undefined,
-          contentRef
-        });
+      if (nextCellId) {
+        const nextCell = cellMap ? cellMap.get(nextCellId) : undefined;
+        if (
+          nextCell === undefined ||
+          (nextCell && nextCell.get("cell_type") === "code")
+        ) {
+          focusNextCellEditor({
+            id: focusedCell || undefined,
+            contentRef
+          });
+        }
       }
     }
   }
@@ -265,8 +271,7 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: ComponentProps) => ({
     dispatch(actions.focusNextCellEditor(payload))
 });
 
-const DraggableNotebookApp = dragDropContext(HTML5Backend)(NotebookApp);
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DraggableNotebookApp);
+const DraggableNotebookApp = dragDropContext(HTML5Backend)(
+  connect(mapStateToProps, mapDispatchToProps)(NotebookApp)
+);
+export default DraggableNotebookApp;

@@ -18,6 +18,7 @@ interface StateProps {
   kernelStatus: string;
   cell_type: string;
   contentRef: ContentRef;
+  channels: any;
 }
 
 export class Editor extends React.PureComponent<ComponentProps & StateProps> {
@@ -90,6 +91,7 @@ export const makeMapStateToProps = (
     let kernelStatus = "not connected";
     let value = "";
     let cell_type = "code";
+    let channels = null;
     const editorType = "codemirror";
 
     if (model && model.type === "notebook") {
@@ -102,6 +104,7 @@ export const makeMapStateToProps = (
           kernel = selectors.kernelByContentRef(state, { contentRef });
           if (kernel) {
             kernelStatus = kernel.status || "not connected";
+            channels = kernel.channels;
           }
         }
       }
@@ -114,7 +117,8 @@ export const makeMapStateToProps = (
       kernelStatus,
       editorType,
       cell_type,
-      contentRef
+      contentRef,
+      channels
     };
   };
 

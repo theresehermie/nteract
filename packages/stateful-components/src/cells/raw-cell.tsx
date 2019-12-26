@@ -34,7 +34,7 @@ export class PureRawCell extends React.Component<
     const { id, contentRef, children } = this.props;
 
     const defaults = {
-      editor: () => <CodeMirrorEditor />
+      editor: () => <CodeMirrorEditor editorType="codemirror" />
     };
 
     const editor = children?.editor || defaults.editor;

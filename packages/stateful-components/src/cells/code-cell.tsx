@@ -58,7 +58,7 @@ export default class CodeCell extends React.Component<ComponentProps> {
           <PromptText />
         </Prompt>
       ),
-      editor: () => <CodeMirrorEditor />,
+      editor: () => <CodeMirrorEditor editorType="codemirror" />,
       pagers: (props: any) => (
         <Pagers id={id} contentRef={contentRef}>
           <Media.Json />

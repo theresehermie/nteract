@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ContentRef, AppState, selectors } from "@nteract/core";
+import { AppState, ContentRef, selectors } from "@nteract/core";
 import { connect } from "react-redux";
 
 interface ComponentProps {
@@ -33,7 +33,7 @@ const makeMapStateToProps = (
 
     let hidden = false;
 
-    if (model && model.type == "notebook") {
+    if (model && model.type === "notebook") {
       const cell = selectors.notebook.cellById(model, { id });
       if (cell) {
         hidden = cell.getIn(["metadata", "jupyter", "source_hidden"]);

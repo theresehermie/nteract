@@ -37,7 +37,7 @@ import { connect } from "react-redux";
 
 export { CodeMirrorCSS, ShowHintCSS };
 
-import { selectors } from "@nteract/core";
+import { AppState, ContentRef, selectors } from "@nteract/core";
 
 function normalizeLineEndings(str: string): string {
   if (!str) {
@@ -65,7 +65,10 @@ export type CodeMirrorEditorProps = {
   onChange?: (value: string, change: EditorChangeLinkedList) => void;
   onFocusChange?: (focused: boolean) => void;
   value: string;
+
   editorType: "codemirror";
+  cell_type: string;
+  contentRef: ContentRef;
 } & Partial<FullEditorConfiguration>;
 
 interface CodeMirrorEditorState {
@@ -506,17 +509,18 @@ const makeMapStateToProps = (
   const mapStateToProps = (state: AppState) => {
     const model = selectors.model(state, { contentRef });
     const lineWrapping = true;
-    let mode;
+    let mode = rawMode;
 
     switch (cell_type) {
       case "markdown":
         mode = markdownMode;
         break;
       case "code":
-        mode =
-          kernel && kernel.info
-            ? kernel.info.codemirrorMode
-            : selectors.notebook.codeMirrorMode(model);
+        if (kernel && kernel.info) {
+          mode = kernel.info.codemirrorMode;
+        } else if (model && model.type === "notebook") {
+          mode = selectors.notebook.codeMirrorMode(model);
+        }
         break;
       default:
         mode = rawMode;
@@ -533,9 +537,5 @@ const makeMapStateToProps = (
 const ConnectedCodeMirrorEditor = connect(makeMapStateToProps)(
   CodeMirrorEditor
 );
-
-ConnectedCodeMirrorEditor.defaultProps = {
-  editorType: "codemirror"
-};
 
 export default ConnectedCodeMirrorEditor;
