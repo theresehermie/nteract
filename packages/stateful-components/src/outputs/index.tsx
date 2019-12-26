@@ -2,7 +2,7 @@ import Immutable from "immutable";
 import React from "react";
 import { connect } from "react-redux";
 
-import { selectors, AppState, ContentRef } from "@nteract/core";
+import { AppState, ContentRef, selectors } from "@nteract/core";
 import { Output } from "@nteract/outputs";
 
 interface ComponentProps {
@@ -22,8 +22,9 @@ export class Outputs extends React.PureComponent<ComponentProps & StateProps> {
     const { outputs, children, hidden, expanded } = this.props;
     return (
       <div
-        className={`nteract-cell-outputs ${hidden && "hidden"} ${expanded &&
-          "expanded"}`}
+        className={`nteract-cell-outputs ${hidden ? "hidden" : ""} ${
+          expanded ? "expanded" : ""
+        }`}
       >
         {outputs.map((output, index) => (
           <Output output={output} key={index}>
@@ -47,7 +48,7 @@ export const makeMapStateToProps = (
     const { contentRef, id } = ownProps;
     const model = selectors.model(state, { contentRef });
 
-    if (model && model.type == "notebook") {
+    if (model && model.type === "notebook") {
       const cell = selectors.notebook.cellById(model, { id });
       if (cell) {
         outputs = cell.get("outputs", Immutable.List());

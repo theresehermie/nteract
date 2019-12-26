@@ -37,6 +37,15 @@ To style with stylesheets, you can use element and combinator-based CSS selector
 
 The following table outlines each stateful component, its CSS classname, and other CSS classes that can be conditionally applied to it.
 
-| Component | Class Name | Other Class Names |
-| Prompt | | `.nteract-prompt-component` | |
-| Output | `.nteract-output-component` | `.hidden .expanded` |
+| Component    | Class Name                | Other Class Names   |
+| ------------ | ------------------------- | ------------------- |
+| Prompt       | `.nteract-cell-prompt`    |
+| Cells        | `.nteract-cells`          |                     |
+| Cell         | `.nteract-cell-container` | `.selected`         |
+| CodeCell     | `.nteract-code-cell`      |                     |
+| MarkdownCell | `.nteract-markdown-cell`  |                     |
+| CellToolbar  | `.nteract-cell-toolbar`   |                     |
+| Input        | `.nteract-cell-input`     |                     |
+| Pagers       | `.nteract-cell-pagers`    |                     |
+| InputPrompts | `.nteract-input-prompts`  |                     |
+| Outputs      | `.nteract-outputs`        | `.hidden .expanded` |

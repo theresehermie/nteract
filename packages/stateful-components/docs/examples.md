@@ -24,7 +24,7 @@ class MyApp extends React.Component {
 
 ## How do I override the default editors in the Notebook component?
 
-Create a React component and override the `editor` child property in each cell component.
+Create a React component and pass a value to the `editor` child render function in the component.
 
 ```js
 import Notebook, {
@@ -43,21 +43,29 @@ class MyNotebook extends React.Component {
   render() {
     return (
       <Notebook>
-        <CodeCell>
-          {{
-            editor: <Editor />
-          }}
-        </CodeCell>
-        <MarkdownCell>
-          {{
-            editor: <Editor />
-          }}
-        </MarkdownCell>
-        <RawCell>
-          {{
-            editor: <Editor />
-          }}
-        </RawCell>
+        {{
+          code: (id: string, contentRef: ContentRef) => (
+            <CodeCell id={id} contentRef={contentRef}>
+              {{
+                editor: () => <Editor />
+              }}
+            </CodeCell>
+          ),
+          markdown: (id: string, contentRef: ContentRef) => (
+            <MarkdownCell id={id} contentRef={contentRef}>
+              {{
+                editor: () => <Editor />
+              }}
+            </MarkdownCell>
+          ),
+          raw: (id: string, contentRef: ContentRef) => (
+            <RawCell id={id} contentRef={contentRef}>
+              {{
+                editor: () => <Editor />
+              }}
+            </RawCell>
+          )
+        }}
       </Notebook>
     );
   }
@@ -66,7 +74,7 @@ class MyNotebook extends React.Component {
 
 ## How do I disable editing of markdown cells in my notebook application?
 
-Create a React component and override the `editor` child property in the `MarkdownCell` component.
+Create a React component and override the `editor` child render function in the `MarkdownCell` component.
 
 ```js
 import Notebook, { MarkdownCell } from "@nteract/stateful-components";
@@ -82,10 +90,10 @@ class MyNotebook extends React.Component {
     return (
       <Notebook>
         {{
-          markdown: (
-            <MarkdownCell>
+          markdown: (id: string, contentRef: ContentRef) => (
+            <MarkdownCell id={id} contentRef={contentRef}>
               {{
-                editor: <Editor />
+                editor: () => <Editor />
               }}
             </MarkdownCell>
           )
@@ -98,7 +106,7 @@ class MyNotebook extends React.Component {
 
 ## How do I override the Output display in code cells?
 
-Create a React component and override the `outputs` property in the `CodeCell` component.
+Create a React component and override the `outputs` child render function in the `CodeCell` component.
 
 ```js
 import Notebook, { CodeCell } from "@nteract/stateful-component";
@@ -117,7 +125,13 @@ class MyNotebook extends React.Component {
   render() {
     return (
       <Notebook>
-        {{ code: <CodeCell>{{ outputs: <Outputs /> }}</CodeCell> }}
+        {{
+          code: (id: string, contentRef: ContentRef) => (
+            <CodeCell id={id} contentRef={contentRef}>
+              {{ outputs: () => <Outputs /> }}
+            </CodeCell>
+          )
+        }}
       </Notebook>
     );
   }

@@ -44,7 +44,7 @@ The @nteract/stateful-components package ships with a default set of implementat
 You can override the children of the `Cells` component and render your own custom `Cell` components for each cell_type. For example, to override the default `MarkdownCell`, you can do the following.
 
 ```js
-import { Cells, CodeCell, RawCell } from "@nteract/stateful-components";
+import { Cells } from "@nteract/stateful-components";
 
 class MarkdownCell extends React.Component {
   static defaultProps = {
@@ -61,9 +61,9 @@ class MyCells extends React.Component {
     return (
       <Cells>
         {{
-          markdown: <MarkdownCell id={cellId} contentRef={contentRef} />,
-          code: <CodeCell id={cellId} contentRef={contentRef} />,
-          raw: <RawCell id={cellId} contentRef={contentRef} />
+          markdown: (cellId: string, contentRef: ContentRef) => (
+            <MarkdownCell id={cellId} contentRef={contentRef} />
+          )
         }}
       </Cells>
     );
@@ -96,8 +96,8 @@ import { CodeCell } from "@nteract/stateful-components";
 
 class MyCodeCell extends React.Component {
     render() {
-        return <CodeCell>
-            {{ prompt: <Prompt> }}
+        return <CodeCell id={cellId} contentRef={contentRef}>
+            {{ prompt: () => <Prompt> }}
         </CodeCell>;
     }
 }
@@ -114,3 +114,6 @@ Overrides are currently enabled for the following parent and child components.
 | CodeCell         | inputPrompts    |
 | MarkdownCell     | editor          |
 | RawCell          | editor          |
+| Cells            | code            |
+| Cells            | markdown        |
+| Cells            | raw             |
