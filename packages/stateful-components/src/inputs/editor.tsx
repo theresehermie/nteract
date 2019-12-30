@@ -21,6 +21,11 @@ interface StateProps {
   channels: any;
 }
 
+interface DispatchProps {
+  onChange: (text: string) => void;
+  onFocusChaged: (focused: boolean) => void;
+}
+
 export class Editor extends React.PureComponent<ComponentProps & StateProps> {
   render() {
     const { editorType } = this.props;
@@ -66,13 +71,7 @@ export class Editor extends React.PureComponent<ComponentProps & StateProps> {
 
     // Render the output component that handles this output type
     return React.cloneElement(chosenOne, {
-      editorFocused: this.props.editorFocused,
-      value: this.props.value,
-      kernel: this.props.kernel,
-      kernelStatus: this.props.kernelStatus,
-      cell_type: this.props.cell_type,
-      contentRef: this.props.contentRef,
-      editorType: this.props.editorType,
+      ...this.props,
       className: "nteract-cell-editor"
     });
   }
