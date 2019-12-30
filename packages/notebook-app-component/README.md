@@ -1,22 +1,25 @@
-# Notebook App Component
+# @nteract/notebook-app-component
 
-A monolithic notebook app, in a component
+This package contains a set of sample implementations of notebook app components built on top of the `@nteract/stateful-components` package. You can use the pre-built notebook app components exported in this package or build your own using the stock implementations as guiding examples.
 
 ## Installation
+
 ```
 npm install --save @nteract/notebook-app-component
 ```
 
 ## Usage
 
-This component is not for the faint of heart. It requires you to setup the redux store used by the other nteract apps. You can check out desktop or jupyter extension for examples.
-
 ```jsx
 import NotebookApp from "@nteract/notebook-app-component";
 
-<NotebookApp
-  // The desktop app always keeps the same contentRef in a
-  // browser window
-  contentRef={contentRef}
-/>
+<NotebookApp contentRef={contentRef} />;
 ```
+
+## Support
+
+If you experience an issue while using this package or have a feature request, please file an issue on the [issue board](https://github.com/nteract/nteract/issues/new/choose) and add the `pkg:notebook-app-component` label.
+
+## License
+
+[BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/)
